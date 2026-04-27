@@ -210,6 +210,8 @@ header h1 em { color: var(--north-country); font-style: italic; }
 .card[data-primary="clause"]     { border-left-color: #5c1f26; }
 .card[data-primary="preposition"]{ border-left-color: #014d27; }
 .card[data-primary="adjective"]  { border-left-color: #1a3a5c; }
+.card[data-primary="pronoun"]    { border-left-color: #6b3fa0; }
+.card[data-primary="verb"]       { border-left-color: #8b4513; }
 
 /* ── TAGS ── */
 .card-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
@@ -232,6 +234,8 @@ header h1 em { color: var(--north-country); font-style: italic; }
 .tag.clause      { background: rgba(115,59,64,0.10);   color: #5c1f26;               border-color: rgba(115,59,64,0.22); }
 .tag.preposition { background: rgba(1,105,53,0.10);    color: #014d27;               border-color: rgba(1,105,53,0.22); }
 .tag.adjective   { background: rgba(41,78,114,0.10);   color: #1a3a5c;               border-color: rgba(41,78,114,0.22); }
+.tag.pronoun     { background: rgba(107,63,160,0.12);  color: #6b3fa0;               border-color: rgba(107,63,160,0.25); }
+.tag.verb        { background: rgba(139,69,19,0.10);   color: #7a3a0a;               border-color: rgba(139,69,19,0.25); }
 
 .rule-label {
   font-size: 0.7rem;
@@ -522,6 +526,8 @@ footer {
     <button class="filter-btn" data-filter="clause">Clauses</button>
     <button class="filter-btn" data-filter="preposition">Prepositions</button>
     <button class="filter-btn" data-filter="adjective">Adjectives</button>
+    <button class="filter-btn" data-filter="verb">Verbs</button>
+    <button class="filter-btn" data-filter="pronoun">Pronouns</button>
   </div>
 </div>
 
@@ -621,13 +627,6 @@ const sentences = [
 },
 {
   tags: ["word-order", "clause"],
-  rule: "omdat — verb-final subordinate",
-  dutch: "Ze leert Nederlands omdat ze van hem houdt.",
-  english: "She learns Dutch because she loves him.",
-  explanation: "<span class='hl'>Omdat</span> (because) forces the verb to the end of its clause. Note: <span class='hl'>houden van</span> is a phrasal verb — the <span class='hl'>van</span> travels with its object, so the clause ends <span class='hl'>…van hem houdt</span>. Compare the simpler pattern below.",
-},
-{
-  tags: ["word-order", "clause"],
   rule: "omdat — verb-final (simple verb)",
   dutch: "Ze glimlacht omdat ze hem kust.",
   english: "She smiles because she kisses him.",
@@ -635,17 +634,24 @@ const sentences = [
 },
 {
   tags: ["word-order", "clause"],
-  rule: "Relative clause — verb to the end",
-  dutch: "De man van wie ze houdt is Antwerpenaar.",
-  english: "The man she loves is from Antwerp.",
-  explanation: "<span class='hl'>Van wie</span> (of whom) is used here because <span class='hl'>houden van</span> requires <span class='hl'>van</span> — so the preposition merges into the relative pronoun. The verb <span class='hl'>houdt</span> still goes to the end. Compare the simpler pattern below.",
+  rule: "omdat — verb-final (houden van)",
+  dutch: "Ze leert Nederlands omdat ze van hem houdt.",
+  english: "She learns Dutch because she loves him.",
+  explanation: "<span class='hl'>Houden van</span> is a phrasal verb — the <span class='hl'>van</span> travels with its object, so the clause ends <span class='hl'>…van hem houdt</span> rather than the more intuitive <span class='hl'>…hem houdt van</span>. Compare the simpler pattern above.",
 },
 {
   tags: ["word-order", "clause"],
   rule: "Relative clause — verb to the end (simple verb)",
   dutch: "De man die ze kust spreekt Antwerps.",
   english: "The man she kisses speaks Antwerp dialect.",
-  explanation: "With a plain transitive verb, the pattern is clean: relative pronoun <span class='hl'>die</span> → subject <span class='hl'>ze</span> → object implied → verb <span class='hl'>kust</span> at the end, then the main clause resumes.",
+  explanation: "With a plain transitive verb, the pattern is clean: relative pronoun <span class='hl'>die</span> → subject <span class='hl'>ze</span> → verb <span class='hl'>kust</span> at the end, then the main clause resumes.",
+},
+{
+  tags: ["word-order", "clause"],
+  rule: "Relative clause — verb to the end (houden van)",
+  dutch: "De man van wie ze houdt is Antwerpenaar.",
+  english: "The man she loves is from Antwerp.",
+  explanation: "<span class='hl'>Van wie</span> (of whom) is used because <span class='hl'>houden van</span> requires <span class='hl'>van</span> — so the preposition merges into the relative pronoun. The verb <span class='hl'>houdt</span> still goes to the end.",
 },
 {
   tags: ["word-order"],
@@ -842,17 +848,17 @@ const sentences = [
 },
 {
   tags: ["question"],
-  rule: "Indirect question — verb to end",
-  dutch: "Annie vraagt zich af of hij ook van haar houdt.",
-  english: "Annie wonders whether he loves her too.",
-  explanation: "Indirect questions introduced by <span class='hl'>of</span> (whether/if) behave like subordinate clauses — verb goes to the end. Again <span class='hl'>houden van</span> means the clause ends <span class='hl'>…van haar houdt</span>. See the simpler version below.",
-},
-{
-  tags: ["question"],
   rule: "Indirect question — verb to end (simple verb)",
   dutch: "Annie vraagt zich af of hij haar knuffelt.",
   english: "Annie wonders whether he will hug her.",
-  explanation: "With a simple verb, the structure is transparent: <span class='hl'>of</span> → subject <span class='hl'>hij</span> → object <span class='hl'>haar</span> → verb <span class='hl'>knuffelt</span> at the very end.",
+  explanation: "Indirect questions introduced by <span class='hl'>of</span> (whether/if) behave like subordinate clauses — verb goes to the end. With a plain verb the pattern is transparent: <span class='hl'>of</span> → subject <span class='hl'>hij</span> → object <span class='hl'>haar</span> → verb <span class='hl'>knuffelt</span> at the very end.",
+},
+{
+  tags: ["question"],
+  rule: "Indirect question — verb to end (houden van)",
+  dutch: "Annie vraagt zich af of hij ook van haar houdt.",
+  english: "Annie wonders whether he loves her too.",
+  explanation: "<span class='hl'>Houden van</span> complicates the pattern: the <span class='hl'>van</span> travels with its object, so the clause ends <span class='hl'>…van haar houdt</span> rather than the more intuitive <span class='hl'>…haar houdt van</span>.",
 },
 // ── CLAUSES ─────────────────────────────────────────────────────────────────
 {
@@ -932,6 +938,176 @@ const sentences = [
   dutch: "Hij doet alles voor haar.",
   english: "He does everything for her.",
   explanation: "<span class='hl'>Voor</span> can mean 'for' (beneficiary), 'before' (time), or 'in front of' (location). Context determines which reading applies.",
+},
+// ── SEPARABLE VERBS ─────────────────────────────────────────────────────────
+{
+  tags: ["verb", "word-order"],
+  rule: "Separable verb — prefix splits off",
+  dutch: "Annie belt haar vriend op.",
+  english: "Annie calls her boyfriend.",
+  explanation: "<span class='hl'>Opbellen</span> (to call) is a separable verb. In a main clause the prefix <span class='hl'>op</span> detaches and moves to the very end. The conjugated part <span class='hl'>belt</span> stays in position 2.",
+},
+{
+  tags: ["verb", "word-order"],
+  rule: "Separable verb — stays together in subordinate clause",
+  dutch: "Ze is blij dat ze hem opbelt.",
+  english: "She is glad that she calls him.",
+  explanation: "In a subordinate clause (here introduced by <span class='hl'>dat</span>), the separable verb stays together as one unit at the end: <span class='hl'>opbelt</span>, not split.",
+},
+{
+  tags: ["verb", "word-order"],
+  rule: "Separable verb — te slots between prefix and stem",
+  dutch: "Ze vergeet nooit hem op te bellen.",
+  english: "She never forgets to call him.",
+  explanation: "When <span class='hl'>te</span> + infinitive is used with a separable verb, <span class='hl'>te</span> slots between the prefix and the stem: <span class='hl'>op te bellen</span>. This is unique to separable verbs.",
+},
+{
+  tags: ["verb", "tense"],
+  rule: "Separable verb — past participle",
+  dutch: "Ze heeft hem gisteren opgebeld.",
+  english: "She called him yesterday.",
+  explanation: "The past participle of a separable verb wraps <span class='hl'>ge-</span> between prefix and stem: <span class='hl'>op</span> + <span class='hl'>ge</span> + <span class='hl'>beld</span> = <span class='hl'>opgebeld</span>. It goes to the end of the clause.",
+},
+// ── REFLEXIVE VERBS ──────────────────────────────────────────────────────────
+{
+  tags: ["verb"],
+  rule: "Reflexive verb — zich (3rd person)",
+  dutch: "Annie voelt zich gelukkig als ze met hem praat.",
+  english: "Annie feels happy when she talks to him.",
+  explanation: "<span class='hl'>Zich voelen</span> (to feel) is reflexive. <span class='hl'>Zich</span> is used for third-person singular and plural. First and second person use <span class='hl'>me</span> and <span class='hl'>je</span> instead.",
+},
+{
+  tags: ["verb"],
+  rule: "Reflexive verb — zich herinneren",
+  dutch: "Ze herinnert zich elke seconde van hun eerste ontmoeting.",
+  english: "She remembers every second of their first meeting.",
+  explanation: "<span class='hl'>Zich herinneren</span> (to remember) always takes a reflexive pronoun. Many Dutch verbs of mental state are reflexive where their English equivalents are not.",
+},
+// ── ER ───────────────────────────────────────────────────────────────────────
+{
+  tags: ["verb", "word-order"],
+  rule: "er — existential (there is / there are)",
+  dutch: "Er is een man die haar elke dag een berichtje stuurt.",
+  english: "There is a man who sends her a message every day.",
+  explanation: "<span class='hl'>Er</span> acts as a placeholder subject when no specific subject is given. It pairs with <span class='hl'>zijn</span> to mean 'there is/are', keeping the verb in position 2.",
+},
+{
+  tags: ["verb", "preposition"],
+  rule: "er — pronominal adverb (ernaar, ervoor…)",
+  dutch: "Ze kijkt er elke avond naar uit.",
+  english: "She looks forward to it every evening.",
+  explanation: "When a preposition's object is a thing rather than a person, Dutch merges <span class='hl'>er</span> with the preposition: <span class='hl'>naar het</span> → <span class='hl'>ernaar</span>. The separable prefix <span class='hl'>uit</span> moves to the end as usual.",
+},
+// ── IMPERATIVE ───────────────────────────────────────────────────────────────
+{
+  tags: ["verb"],
+  rule: "Imperative — bare stem",
+  dutch: "Oefen elke dag!",
+  english: "Practise every day!",
+  explanation: "The Dutch imperative is the verb stem alone: infinitive <span class='hl'>oefenen</span> → stem <span class='hl'>oefen</span>. It applies to both singular and plural 'you'.",
+},
+{
+  tags: ["verb"],
+  rule: "Imperative — softened with je",
+  dutch: "Geef jezelf de tijd om het te leren.",
+  english: "Give yourself the time to learn it.",
+  explanation: "Adding <span class='hl'>je</span> after the imperative softens or encourages. <span class='hl'>Jezelf</span> (yourself) is the emphatic reflexive form.",
+},
+// ── PASSIVE ──────────────────────────────────────────────────────────────────
+{
+  tags: ["verb", "tense"],
+  rule: "Passive — worden + participle (action)",
+  dutch: "Nederlands wordt door Annie elke dag geoefend.",
+  english: "Dutch is practised by Annie every day.",
+  explanation: "The present passive uses <span class='hl'>worden</span> + past participle. The agent (Annie) is introduced by <span class='hl'>door</span> (by). The participle goes to the end.",
+},
+{
+  tags: ["verb", "tense"],
+  rule: "Passive — zijn + participle (result state)",
+  dutch: "Het woord is al geleerd.",
+  english: "The word has already been learned.",
+  explanation: "The <span class='hl'>zijn</span>-passive describes a resulting state rather than an ongoing action. Compare: <span class='hl'>wordt geleerd</span> (is being learned — action) vs <span class='hl'>is geleerd</span> (has been learned — state).",
+},
+// ── WORDEN ───────────────────────────────────────────────────────────────────
+{
+  tags: ["verb"],
+  rule: "worden — to become / to get",
+  dutch: "Annie wordt elke dag beter in Nederlands.",
+  english: "Annie gets better at Dutch every day.",
+  explanation: "<span class='hl'>Worden</span> + adjective expresses a change of state ('to become/get'). It is not the same as <span class='hl'>zijn</span>, which describes a permanent condition.",
+},
+// ── DOUBLE INFINITIVE ────────────────────────────────────────────────────────
+{
+  tags: ["verb", "word-order"],
+  rule: "Double infinitive — modal in perfect tense",
+  dutch: "Ze heeft de hele avond Nederlands willen oefenen.",
+  english: "She wanted to practise Dutch all evening.",
+  explanation: "When a modal is used in the perfect tense, it appears as an infinitive rather than a participle: <span class='hl'>willen oefenen</span>, not <span class='hl'>gewild</span>. This cluster sits at the very end of the clause.",
+},
+{
+  tags: ["verb", "word-order"],
+  rule: "Double infinitive — laten (causative)",
+  dutch: "Hij laat haar dromen.",
+  english: "He lets her dream.",
+  explanation: "<span class='hl'>Laten</span> (to let / to have something done) takes a bare infinitive. The object of <span class='hl'>laten</span> (<span class='hl'>haar</span>) is the one who performs the second action.",
+},
+// ── PRONOUNS ────────────────────────────────────────────────────────────────
+{
+  tags: ["pronoun"],
+  rule: "Subject vs object pronouns",
+  dutch: "Zij schrijft hem een brief; hij schrijft haar terug.",
+  english: "She writes him a letter; he writes her back.",
+  explanation: "Dutch distinguishes subject (<span class='hl'>zij/hij</span>) and object (<span class='hl'>haar/hem</span>) pronouns. <span class='hl'>Zij</span> is the stressed form of <span class='hl'>ze</span>; <span class='hl'>hij</span> is always the same.",
+},
+{
+  tags: ["pronoun"],
+  rule: "Unstressed vs stressed pronouns",
+  dutch: "Ze belt hem op, maar híj belt haar nooit op.",
+  english: "She calls him, but he never calls her.",
+  explanation: "Unstressed <span class='hl'>ze</span> is the default; stressed <span class='hl'>zij</span> (written <span class='hl'>híj</span> for him) is used for contrast or emphasis. Stress changes the pronoun form.",
+},
+{
+  tags: ["pronoun"],
+  rule: "het vs dat — neuter pronoun",
+  dutch: "Antwerps is moeilijk, maar ze leert het snel.",
+  english: "Antwerp dialect is difficult, but she's learning it quickly.",
+  explanation: "<span class='hl'>Het</span> refers back to neuter nouns or to whole ideas/clauses. As a pronoun replacing a previously mentioned concept, <span class='hl'>het</span> is the standard choice.",
+},
+{
+  tags: ["pronoun"],
+  rule: "Possessive pronouns",
+  dutch: "Zijn stad is haar stad geworden.",
+  english: "His city has become her city.",
+  explanation: "<span class='hl'>Zijn</span> (his) and <span class='hl'>haar</span> (her) are possessive pronouns. They agree with the possessor, not with the noun they modify — unlike adjectives.",
+},
+// ── CONJUNCTIONS ────────────────────────────────────────────────────────────
+{
+  tags: ["clause"],
+  rule: "Coordinating conjunction — en, maar, of",
+  dutch: "Ze leert Nederlands en hij leert een beetje Engels.",
+  english: "She learns Dutch and he learns a little English.",
+  explanation: "Coordinating conjunctions (<span class='hl'>en</span>, <span class='hl'>maar</span>, <span class='hl'>of</span>) join two main clauses. They do NOT trigger verb-final order — each clause keeps its normal SVO structure.",
+},
+{
+  tags: ["clause"],
+  rule: "want vs omdat — both mean 'because'",
+  dutch: "Ze oefent hard, want ze wil hem verrassen.",
+  english: "She practises hard, because she wants to surprise him.",
+  explanation: "<span class='hl'>Want</span> is a coordinating conjunction — the verb stays in position 2 in the following clause. <span class='hl'>Omdat</span> is subordinating — it sends the verb to the end. Compare: <span class='hl'>want ze wil</span> vs <span class='hl'>omdat ze wil</span> → <span class='hl'>omdat ze hem wil verrassen</span>.",
+},
+{
+  tags: ["clause"],
+  rule: "terwijl — while (simultaneous)",
+  dutch: "Ze luistert naar Nederlandstalige podcasts terwijl ze kookt.",
+  english: "She listens to Dutch-language podcasts while she cooks.",
+  explanation: "<span class='hl'>Terwijl</span> (while) introduces a subordinate clause of simultaneous action. Like all subordinating conjunctions, it sends the verb to the end.",
+},
+{
+  tags: ["clause"],
+  rule: "tenzij — unless",
+  dutch: "Ze belt hem elke avond op, tenzij hij slaapt.",
+  english: "She calls him every evening, unless he's asleep.",
+  explanation: "<span class='hl'>Tenzij</span> (unless) introduces a verb-final subordinate clause. It also contains a separable verb: <span class='hl'>opbellen</span> with prefix <span class='hl'>op</span> stranded at the end of the main clause.",
 },
 // ── ADJECTIVES ──────────────────────────────────────────────────────────────
 {
@@ -1073,6 +1249,8 @@ function getBorderColor(tag) {
     'clause': '#5c1f26',
     'preposition': '#014d27',
     'adjective': '#1a3a5c',
+    'pronoun': '#6b3fa0',
+    'verb': '#8b4513',
   };
   return map[tag] || '#CBCAD0';
 }
