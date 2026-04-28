@@ -725,12 +725,34 @@ const sentences = [
   explanation: "<span class='hl'>Niet...maar</span> is the standard pattern for 'not X but Y'. <span class='hl'>Niet</span> negates specifically what follows; <span class='hl'>maar</span> introduces the correction.",
 },
 // ── TENSES ──────────────────────────────────────────────────────────────────
+// ── TENSES ──────────────────────────────────────────────────────────────────
 {
   tags: ["tense"],
   rule: "Simple present (onvoltooid tegenwoordige tijd)",
   dutch: "Annie leert Nederlands.",
   english: "Annie learns / is learning Dutch.",
-  explanation: "Dutch has no continuous tense. <span class='hl'>Leert</span> covers both 'learns' and 'is learning'. The stem is the infinitive minus <span class='hl'>-en</span>.",
+  explanation: "Dutch verb endings don't distinguish between 'learns' and 'is learning' — <span class='hl'>leert</span> covers both as a general statement. For emphasis that something is happening right at this moment, Dutch uses the <span class='hl'>aan het</span> construction instead.",
+},
+{
+  tags: ["tense"],
+  rule: "aan het — present progressive (simple verb)",
+  dutch: "Ze is Nederlands aan het leren voor hem.",
+  english: "She is learning Dutch for him.",
+  explanation: "<span class='hl'>Zijn</span> + <span class='hl'>aan het</span> + infinitive stresses that something is actively happening right now — something the simple present alone can't express. The infinitive goes to the end of the clause.",
+},
+{
+  tags: ["tense"],
+  rule: "aan het — progressive with prepositional verb",
+  dutch: "Ze is aan het denken aan hun volgende ontmoeting.",
+  english: "She is thinking about their next meeting.",
+  explanation: "When the verb takes a fixed preposition (<span class='hl'>denken aan</span> — to think about), the prepositional phrase follows the infinitive. The two <span class='hl'>aan</span>s can look surprising at first — one belongs to <span class='hl'>aan het</span>, the other to the verb itself.",
+},
+{
+  tags: ["tense", "verb"],
+  rule: "zitten/staan/liggen te — positional progressive",
+  dutch: "Ze zit te dromen over hun weekend in Antwerpen.",
+  english: "She sits daydreaming about their weekend in Antwerp.",
+  explanation: "<span class='hl'>Zitten/staan/liggen</span> + <span class='hl'>te</span> + infinitive is a colloquial alternative to <span class='hl'>aan het</span>, implying a physical posture. <span class='hl'>Zitten te dromen</span> suggests she is lost in thought — very natural in spoken Dutch.",
 },
 {
   tags: ["tense"],
