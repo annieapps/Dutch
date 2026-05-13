@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversation Aid — Annie Leert Nederlands</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@500;600&display=swap');
+:root{--scheldt-blue:#294E72;--brothers-green:#016935;--croissant:#FFA500;--burgundy:#733B40;--castle-grey:#6B6B6B;--charcoal:#1c1d24;--north-country:#A6C5EA;--bitten-croissant:#F3D6B0;--oat-milk:#F6F7F6;--fog:#CBCAD0;--bg:#F6F7F6;--surface:#fff;--border:#CBCAD0;--ink:#1c1d24;--muted:#6B6B6B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:"Source Sans 3",sans-serif;font-weight:300;min-height:100vh;font-size:16px;line-height:1.5;}
+/* NAV */
+.topnav{background:var(--charcoal);display:flex;align-items:center;padding:0 2rem;height:48px;position:sticky;top:0;z-index:20;}
+.topnav-home{font-family:"Playfair Display",serif;font-size:.95rem;font-weight:700;color:var(--oat-milk);text-decoration:none;margin-right:1.5rem;white-space:nowrap;}
+.topnav-home em{color:var(--north-country);font-style:italic;}
+.topnav-links{display:flex;flex:1;}
+.topnav-link{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:var(--fog);text-decoration:none;padding:0 1rem;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap;}
+.topnav-link:hover{color:var(--north-country);}
+.topnav-link.active{color:var(--oat-milk);border-bottom-color:var(--north-country);}
+/* HEADER */
+header{background:var(--charcoal);color:var(--oat-milk);padding:2.2rem 2rem 1.8rem;position:relative;overflow:hidden;}
+header::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 20% 50%,rgba(115,59,64,0.2) 0%,transparent 70%);pointer-events:none;}
+header h1{font-family:"Playfair Display",serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;position:relative;color:var(--oat-milk);}
+header h1 em{color:var(--north-country);font-style:italic;}
+.header-sub{margin-top:.4rem;font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;color:var(--fog);position:relative;}
+/* TAG PANEL */
+.tag-panel{background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:48px;z-index:10;box-shadow:0 2px 8px rgba(28,29,36,0.06);}
+.tag-panel-inner{max-width:1060px;margin:0 auto;padding:.8rem 2rem;display:flex;flex-direction:column;gap:.5rem;}
+.tag-row{display:flex;align-items:center;gap:.32rem;flex-wrap:wrap;}
+.tag-row-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.13em;font-weight:600;color:var(--muted);flex-shrink:0;width:4.2rem;}
+.tag-btn{background:transparent;border:1.5px solid var(--border);color:var(--muted);padding:.2rem .65rem;border-radius:2rem;font-family:"Source Sans 3",sans-serif;font-size:.72rem;cursor:pointer;transition:all .15s;font-weight:400;white-space:nowrap;}
+.tag-btn:hover{border-color:var(--scheldt-blue);color:var(--scheldt-blue);}
+.tag-btn[data-tag="present"].active{background:var(--scheldt-blue);color:var(--oat-milk);border-color:var(--scheldt-blue);font-weight:600;}
+.tag-btn[data-tag="past"].active{background:var(--burgundy);color:var(--oat-milk);border-color:var(--burgundy);font-weight:600;}
+.tag-btn[data-tag="future"].active{background:var(--brothers-green);color:var(--oat-milk);border-color:var(--brothers-green);font-weight:600;}
+.tag-btn[data-tag="statement"].active{background:#2a4a3a;color:var(--oat-milk);border-color:#2a4a3a;font-weight:600;}
+.tag-btn[data-tag="question"].active{background:#5c1f26;color:var(--oat-milk);border-color:#5c1f26;font-weight:600;}
+.tag-btn[data-tag="negation"].active{background:#1a3a5c;color:var(--oat-milk);border-color:#1a3a5c;font-weight:600;}
+.tag-btn[data-tag="modal"].active{background:#7a4a10;color:var(--oat-milk);border-color:#7a4a10;font-weight:600;}
+.tag-btn[data-tag="separable"].active{background:#6b3fa0;color:var(--oat-milk);border-color:#6b3fa0;font-weight:600;}
+.tag-btn[data-tag="opinion"].active{background:#014d27;color:var(--oat-milk);border-color:#014d27;font-weight:600;}
+.tag-btn[data-tag="word-order"].active{background:#3d3020;color:var(--oat-milk);border-color:#3d3020;font-weight:600;}
+.tag-btn[data-tag="subordinate"].active{background:#4a2060;color:var(--oat-milk);border-color:#4a2060;font-weight:600;}
+.tag-btn[data-tag="classroom"].active{background:#003f5c;color:var(--oat-milk);border-color:#003f5c;font-weight:600;}
+.tag-btn[data-tag="because"].active{background:#8b3a00;color:var(--oat-milk);border-color:#8b3a00;font-weight:600;}
+.tag-btn[data-tag="if"].active{background:#005f6b;color:var(--oat-milk);border-color:#005f6b;font-weight:600;}
+.tag-btn[data-tag="when"].active{background:#3b4f00;color:var(--oat-milk);border-color:#3b4f00;font-weight:600;}
+.tag-btn[data-tag="so-that"].active{background:#4a003f;color:var(--oat-milk);border-color:#4a003f;font-weight:600;}
+.tag-btn[data-tag="although"].active{background:#003f5c;color:var(--oat-milk);border-color:#003f5c;font-weight:600;}
+.tag-btn[data-tag="therefore"].active{background:#5c3d00;color:var(--oat-milk);border-color:#5c3d00;font-weight:600;}
+.tag-btn[data-tag="while"].active{background:#1a3320;color:var(--oat-milk);border-color:#1a3320;font-weight:600;}
+.tag-btn[data-tag="that"].active{background:#3a1a1a;color:var(--oat-milk);border-color:#3a1a1a;font-weight:600;}
+.tag-btn[data-tag="inorder"].active{background:#1a2a4a;color:var(--oat-milk);border-color:#1a2a4a;font-weight:600;}
+.clear-btn{margin-left:auto;background:transparent;border:none;font-family:"Source Sans 3",sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);cursor:pointer;padding:.2rem .4rem;transition:color .15s;flex-shrink:0;}
+.clear-btn:hover{color:var(--burgundy);}
+/* COUNT */
+.count{text-align:center;color:var(--muted);font-size:.73rem;padding:.8rem 2rem .25rem;letter-spacing:.06em;}
+.count strong{color:var(--ink);font-weight:600;}
+/* SECTIONS */
+.section-wrap{max-width:1060px;margin:0 auto;}
+.section-header{display:flex;align-items:center;gap:.8rem;margin:1.5rem 2rem .45rem;scroll-margin-top:140px;}
+.section-header h2{font-size:.65rem;text-transform:uppercase;letter-spacing:.16em;font-weight:600;color:var(--muted);white-space:nowrap;}
+.section-header::after{content:"";flex:1;height:1px;background:var(--border);}
+.section-wrap.hidden{display:none;}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:.82rem;padding:0 2rem .5rem;}
+/* CARD */
+.card{background:var(--surface);border:1.5px solid var(--border);border-left-width:4px;border-radius:6px;padding:1rem 1.1rem .9rem;display:flex;flex-direction:column;gap:.5rem;animation:fadeUp .22s ease both;transition:box-shadow .18s,transform .18s;}
+.card:hover{box-shadow:0 4px 18px rgba(41,78,114,0.09);transform:translateY(-1px);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.card.hidden{display:none;}
+.card[data-group="present"]{border-left-color:var(--scheldt-blue);}
+.card[data-group="past"]{border-left-color:var(--burgundy);}
+.card[data-group="future"]{border-left-color:var(--brothers-green);}
+.card[data-group="modal"]{border-left-color:var(--croissant);}
+.card[data-group="separable"]{border-left-color:#6b3fa0;}
+.card[data-group="word-order"]{border-left-color:#3d3020;}
+.card[data-group="question"]{border-left-color:#5c1f26;}
+.card[data-group="negation"]{border-left-color:#1a3a5c;}
+.card[data-group="opinion"]{border-left-color:#014d27;}
+.card[data-group="subordinate"]{border-left-color:#4a2060;}
+.card[data-group="classroom"]{border-left-color:#003f5c;}
+/* CARD CONTENT */
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem;}
+.card-num{font-size:.61rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);flex-shrink:0;}
+.level-badge{font-size:.58rem;font-weight:700;letter-spacing:.08em;padding:.1rem .35rem;border-radius:3px;white-space:nowrap;flex-shrink:0;}
+.level-A0{background:#e8e8f0;color:#4a4a6a;border:1px solid #c8c8d8;}
+.level-A1{background:rgba(166,197,234,0.35);color:var(--scheldt-blue);border:1px solid rgba(41,78,114,0.25);}
+.level-A2{background:rgba(192,191,135,0.40);color:#1a5c3a;border:1px solid rgba(26,92,58,0.25);}
+.level-B1{background:rgba(216,191,216,0.40);color:var(--burgundy);border:1px solid rgba(115,59,64,0.25);}
+.level-B2{background:rgba(243,214,176,0.50);color:#5c3d00;border:1px solid rgba(92,61,0,0.25);}
+.level-C1{background:rgba(107,63,160,0.12);color:#3a1a5c;border:1px solid rgba(58,26,92,0.25);}
+.card-title{font-family:"Playfair Display",serif;font-size:.93rem;font-weight:700;color:var(--charcoal);line-height:1.3;}
+.card-structure{font-family:"Source Code Pro",monospace;font-size:.82rem;font-weight:500;color:var(--scheldt-blue);background:rgba(166,197,234,0.12);border:1px solid rgba(166,197,234,0.35);border-radius:4px;padding:.38rem .58rem;line-height:1.85;}
+.slot{color:var(--castle-grey);font-style:italic;}
+.fixed{color:var(--charcoal);font-weight:600;font-style:normal;}
+.conn{color:#8b3a00;font-weight:600;font-style:normal;}
+.card-example{font-size:.76rem;color:var(--muted);line-height:1.6;font-style:italic;}
+.card-example span{color:var(--ink);font-weight:400;}
+.card-note{font-size:.73rem;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:.42rem;}
+.card-note strong{color:var(--burgundy);font-weight:600;}
+/* CLASSROOM PHRASE CARD */
+.phrase-card{background:var(--surface);border:1.5px solid var(--border);border-left:4px solid #003f5c;border-radius:6px;padding:1rem 1.1rem .9rem;display:flex;flex-direction:column;gap:.4rem;animation:fadeUp .22s ease both;transition:box-shadow .18s;}
+.phrase-card:hover{box-shadow:0 4px 18px rgba(0,63,92,0.10);}
+.phrase-card.hidden{display:none;}
+.phrase-nl{font-family:"Playfair Display",serif;font-size:1.02rem;font-weight:700;color:var(--charcoal);}
+.phrase-en{font-size:.82rem;color:var(--muted);font-style:italic;}
+.phrase-note{font-size:.72rem;color:var(--muted);border-top:1px solid var(--border);padding-top:.38rem;line-height:1.55;}
+/* CARD TAGS */
+.card-tags{display:flex;flex-wrap:wrap;gap:.2rem;margin-top:.05rem;}
+.ctag{font-size:.58rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600;padding:.08rem .35rem;border-radius:3px;}
+.ct-present{background:rgba(166,197,234,0.30);color:var(--scheldt-blue);border:1px solid rgba(41,78,114,0.2);}
+.ct-past{background:rgba(216,191,216,0.35);color:var(--burgundy);border:1px solid rgba(115,59,64,0.2);}
+.ct-future{background:rgba(192,191,135,0.35);color:var(--brothers-green);border:1px solid rgba(1,105,53,0.2);}
+.ct-all-tenses{background:rgba(203,202,208,0.45);color:#2e2e3a;border:1px solid rgba(107,107,107,0.25);}
+.ct-question{background:rgba(92,31,38,0.10);color:#5c1f26;border:1px solid rgba(92,31,38,0.2);}
+.ct-negation{background:rgba(26,58,92,0.10);color:#1a3a5c;border:1px solid rgba(26,58,92,0.2);}
+.ct-modal{background:rgba(243,214,176,0.50);color:#7a4a10;border:1px solid rgba(255,165,0,0.3);}
+.ct-separable{background:rgba(107,63,160,0.12);color:#6b3fa0;border:1px solid rgba(107,63,160,0.25);}
+.ct-opinion{background:rgba(1,77,39,0.10);color:#014d27;border:1px solid rgba(1,77,39,0.2);}
+.ct-word-order{background:rgba(61,48,32,0.10);color:#3d3020;border:1px solid rgba(61,48,32,0.2);}
+.ct-statement{background:rgba(42,74,58,0.10);color:#2a4a3a;border:1px solid rgba(42,74,58,0.2);}
+.ct-subordinate{background:rgba(74,32,96,0.10);color:#4a2060;border:1px solid rgba(74,32,96,0.2);}
+.ct-classroom{background:rgba(0,63,92,0.10);color:#003f5c;border:1px solid rgba(0,63,92,0.2);}
+.ct-because{background:rgba(139,58,0,0.10);color:#8b3a00;border:1px solid rgba(139,58,0,0.2);}
+.ct-if{background:rgba(0,95,107,0.10);color:#005f6b;border:1px solid rgba(0,95,107,0.2);}
+.ct-when{background:rgba(59,79,0,0.10);color:#3b4f00;border:1px solid rgba(59,79,0,0.2);}
+.ct-so-that{background:rgba(74,0,63,0.10);color:#4a003f;border:1px solid rgba(74,0,63,0.2);}
+.ct-although{background:rgba(0,63,92,0.10);color:#003f5c;border:1px solid rgba(0,63,92,0.2);}
+.ct-therefore{background:rgba(92,61,0,0.10);color:#5c3d00;border:1px solid rgba(92,61,0,0.2);}
+.ct-while{background:rgba(26,51,32,0.10);color:#1a3320;border:1px solid rgba(26,51,32,0.2);}
+.ct-that{background:rgba(58,26,26,0.10);color:#3a1a1a;border:1px solid rgba(58,26,26,0.2);}
+.ct-inorder{background:rgba(26,42,74,0.10);color:#1a2a4a;border:1px solid rgba(26,42,74,0.2);}
+/* EMPTY */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--muted);font-style:italic;font-size:.88rem;display:none;max-width:1060px;margin:0 auto;}
+.empty-state.show{display:block;}
+/* EXAMPLE LINK */
+.example-link{font-size:.68rem;color:var(--scheldt-blue);text-decoration:none;display:inline-flex;align-items:center;gap:.2rem;font-weight:600;opacity:.75;transition:opacity .15s;margin-top:.05rem;}
+.example-link:hover{opacity:1;text-decoration:underline;}
+.example-link::before{content:"⇢";}
+footer{text-align:center;padding:1.6rem 2rem;color:var(--muted);font-size:.76rem;border-top:1px solid var(--border);letter-spacing:.06em;font-style:italic;margin-top:2rem;}
+@media(max-width:600px){.grid{padding:0 1rem .5rem;}.tag-panel-inner{padding:.65rem 1rem;}.section-header{margin:1.2rem 1rem .4rem;}.topnav-links .topnav-link:not(.active){display:none;}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="topnav-home" href="index.html">Annie leert <em>Nederlands</em></a>
+  <div class="topnav-links">
+    <a class="topnav-link" href="learn.html">📖 Learn</a>
+    <a class="topnav-link" href="revise.html">🃏 Revise</a>
+    <a class="topnav-link active" href="structures.html">💬 Conversation</a>
+    <a class="topnav-link" href="verbs.html">📋 Verbs</a>
+  </div>
+</nav>
+<header>
+  <h1><em>Conversation</em> Aid</h1>
+  <p class="header-sub">Sentence structures · filter by tense, type or connector · A0–B1</p>
+</header>
+<div class="tag-panel">
+  <div class="tag-panel-inner">
+    <div class="tag-row">
+      <span class="tag-row-label">Tense</span>
+      <button class="tag-btn" data-tag="present">Present</button>
+      <button class="tag-btn" data-tag="past">Past</button>
+      <button class="tag-btn" data-tag="future">Future</button>
+      <button class="clear-btn" onclick="clearAll()">Clear all</button>
+    </div>
+    <div class="tag-row">
+      <span class="tag-row-label">Type</span>
+      <button class="tag-btn" data-tag="statement">Statement</button>
+      <button class="tag-btn" data-tag="question">Question</button>
+      <button class="tag-btn" data-tag="negation">Negation</button>
+      <button class="tag-btn" data-tag="modal">Modal</button>
+      <button class="tag-btn" data-tag="separable">Separable</button>
+      <button class="tag-btn" data-tag="opinion">Opinion</button>
+      <button class="tag-btn" data-tag="word-order">Word order</button>
+      <button class="tag-btn" data-tag="subordinate">Subordinate</button>
+      <button class="tag-btn" data-tag="classroom">🙋 Classroom</button>
+    </div>
+    <div class="tag-row">
+      <span class="tag-row-label">Connect</span>
+      <button class="tag-btn" data-tag="because">because</button>
+      <button class="tag-btn" data-tag="if">if</button>
+      <button class="tag-btn" data-tag="when">when</button>
+      <button class="tag-btn" data-tag="while">while</button>
+      <button class="tag-btn" data-tag="that">that</button>
+      <button class="tag-btn" data-tag="so-that">so that</button>
+      <button class="tag-btn" data-tag="although">although</button>
+      <button class="tag-btn" data-tag="therefore">therefore</button>
+      <button class="tag-btn" data-tag="inorder">in order to</button>
+    </div>
+  </div>
+</div>
+<p class="count" id="count"></p>
+<div id="sections-root"></div>
+<div class="empty-state" id="empty">No structures match all selected tags. Try fewer filters.</div>
+<footer>Veel succes, lieve Annie 🌷 — Antwerpen wacht op je</footer>
+<script>
+const S=t=>`<span class="slot">[${t}]</span>`;
+const F=t=>`<span class="fixed">${t}</span>`;
+const C=t=>`<span class="conn">${t}</span>`;
+
+const structures=[
+  // PRESENT
+  {num:1,group:"present",tags:["present","statement"],level:"A0",title:"General statement",structure:`${S("who")} + ${S("does")} + ${S("what/where")}`,example:"Ik leer Nederlands. / Ze woont in Antwerpen.",note:null},
+  {num:2,group:"present",tags:["present","statement"],level:"A1",title:"Right now — progressive",structure:`${S("who")} + ${F("ben/is")} + ${F("aan het")} + ${S("action")}`,example:"Ik ben Nederlands aan het leren.",note:"Use when something is actively happening at this moment."},
+  {num:3,group:"present",tags:["present","statement"],level:"A0",title:"Describing — to be + adjective",structure:`${S("who")} + ${F("ben/is/zijn")} + ${S("how you feel/are")}`,example:"Ik ben moe. / Hij is Belgisch.",note:"No -e ending on the adjective after zijn."},
+  {num:4,group:"present",tags:["present","statement"],level:"A0",title:"Having something",structure:`${S("who")} + ${F("heb/heeft")} + ${S("thing")}`,example:"Ik heb een zus.",note:null},
+  {num:5,group:"present",tags:["present","statement","modal"],level:"A1",title:"Modal — present",structure:`${S("who")} + ${S("kan/wil/moet/mag")} + ${S("extra detail")} + ${S("action")}`,example:"Ik wil meer oefenen. / Ik kan een beetje Nederlands spreken.",note:"Modal in position 2; action verb (infinitive) goes to the very end."},
+  {num:6,group:"present",tags:["present","statement","separable"],level:"A2",title:"Separable verb — present",structure:`${S("who")} + ${S("verb stem")} + ${S("what")} + ${S("prefix")}`,example:"Ik bel hem op. / Ze maakt het schoon.",note:"The prefix splits off and goes to the very end."},
+  {num:7,group:"present",tags:["present","negation"],level:"A1",title:"Negation — present",structure:`${S("who")} + ${S("does")} + ${F("geen")} + ${S("noun")}<br>${S("who")} + ${S("does")} + ${S("rest")} + ${F("niet")}`,example:"Ik heb geen auto. / Ik woon niet in België.",note:"<strong>geen</strong> negates an indefinite noun. <strong>niet</strong> goes as late as possible for everything else."},
+  {num:8,group:"present",tags:["present","question"],level:"A0",title:"Yes/no question — present",structure:`${S("does")} + ${S("who")} + ${S("rest")}?`,example:"Woon jij in België? / Leer jij Nederlands?",note:"<strong>jij/je loses its -t</strong> after the verb: woon jij, not woont jij."},
+  {num:9,group:"present",tags:["present","question"],level:"A0",title:"Question word — present",structure:`${S("wat/waar/waarom/hoe")} + ${S("does")} + ${S("who")} + ${S("rest")}?`,example:"Waar woon jij? / Waarom leer jij Nederlands?",note:null},
+  {num:10,group:"present",tags:["present","opinion"],level:"A1",title:"Opinion — present",structure:`${S("who")} + ${F("vind")} + ${S("the thing")} + ${S("good/bad/interesting")}`,example:"Ik vind het leuk. / Ik vind Nederlands moeilijk.",note:"No -e ending on the adjective here."},
+  // PAST
+  {num:11,group:"past",tags:["past","statement"],level:"A1",title:"Past — with hebben",structure:`${S("who")} + ${F("heb/heeft")} + ${S("what")} + ${F("ge")}${S("action")}${F("d/t")}`,example:"Ik heb Nederlands gestudeerd. / Ze heeft koffie gedronken.",note:"Most verbs. The participle goes to the very end."},
+  {num:12,group:"past",tags:["past","statement"],level:"A1",title:"Past — with zijn (movement/change)",structure:`${S("who")} + ${F("ben/is")} + ${S("where/detail")} + ${F("ge")}${S("action")}${F("en")}`,example:"Ik ben naar Antwerpen gereisd. / Ze is gevallen.",note:"<strong>Movement or change of state</strong> takes zijn: gegaan, gekomen, gereisd, gevallen."},
+  {num:13,group:"past",tags:["past","statement","modal"],level:"B1",title:"Modal — past (double infinitive)",structure:`${S("who")} + ${F("heb/heeft")} + ${S("what")} + ${S("action")} + ${S("modal as infinitive")}`,example:"Ik heb niet kunnen komen. / Ze heeft meer willen oefenen.",note:"<strong>The modal appears as an infinitive at the end</strong>, not as ge[verb]d."},
+  {num:14,group:"past",tags:["past","statement","separable"],level:"A2",title:"Separable verb — past",structure:`${S("who")} + ${F("heb/heeft")} + ${S("what")} + ${S("prefix")}${F("ge")}${S("action")}${F("d/t")}`,example:"Ik heb hem opgebeld.",note:"<strong>ge- slots between prefix and stem:</strong> opbellen → opgebeld."},
+  {num:15,group:"past",tags:["past","negation"],level:"A1",title:"Negation — past",structure:`${S("who")} + ${F("heb/heeft")} + ${S("rest")} + ${F("niet")} + ${F("ge")}${S("action")}${F("d/t")}`,example:"Ik heb niet geoefend. / Ze heeft geen auto gehad.",note:"niet and geen still precede the participle at the end."},
+  {num:16,group:"past",tags:["past","question"],level:"A1",title:"Yes/no question — past",structure:`${F("Heb/Heeft")} + ${S("who")} + ${S("what")} + ${F("ge")}${S("action")}${F("d/t")}?`,example:"Heb jij Nederlands gestudeerd?",note:"hebben moves to position 1; participle stays at the end."},
+  {num:17,group:"past",tags:["past","question"],level:"A1",title:"Question word — past",structure:`${S("wat/waar/waarom/hoe")} + ${F("heb/heeft")} + ${S("who")} + ${S("rest")} + ${F("ge")}${S("action")}${F("d/t")}?`,example:"Waarom heb jij Nederlands geleerd? / Waar ben jij geweest?",note:null},
+  {num:18,group:"past",tags:["past","opinion"],level:"A1",title:"Opinion — past",structure:`${S("who")} + ${F("vond")} + ${S("the thing")} + ${S("good/bad/interesting")}`,example:"Ik vond het leuk. / Ze vond het moeilijk.",note:null},
+  // FUTURE
+  {num:19,group:"future",tags:["future","statement"],level:"A1",title:"Near future — gaan",structure:`${S("who")} + ${F("ga/gaat")} + ${S("detail")} + ${S("action")}`,example:"Ik ga morgen naar Antwerpen. / Ze gaat Nederlands leren.",note:"Action (infinitive) goes to the end. Use for imminent plans."},
+  {num:20,group:"future",tags:["future","statement"],level:"A2",title:"Further future — zullen",structure:`${S("who")} + ${F("zal/zullen")} + ${S("detail")} + ${S("action")}`,example:"Ik zal volgend jaar vloeiend spreken.",note:"Conditional with <strong>zou/zouden</strong>: Ik zou graag in Antwerpen wonen."},
+  {num:21,group:"future",tags:["future","statement","modal"],level:"A1",title:"Modal — future",structure:`${S("who")} + ${S("kan/wil/moet/mag")} + ${S("detail")} + ${S("action")}`,example:"Ik wil morgen oefenen.",note:"Present-tense modals carry future meaning naturally."},
+  {num:22,group:"future",tags:["future","negation"],level:"A1",title:"Negation — future",structure:`${S("who")} + ${F("ga/gaat")} + ${F("niet")} + ${S("action")}`,example:"Ik ga niet studeren vanavond.",note:"niet sits before the infinitive at the end."},
+  {num:23,group:"future",tags:["future","question"],level:"A1",title:"Yes/no question — future",structure:`${F("Ga/Gaat")} + ${S("who")} + ${S("detail")} + ${S("action")}?`,example:"Ga jij morgen oefenen?",note:null},
+  {num:24,group:"future",tags:["future","question"],level:"A1",title:"Question word — future",structure:`${S("wat/waar/wanneer/hoe")} + ${F("ga/gaat")} + ${S("who")} + ${S("rest")} + ${S("action")}?`,example:"Wanneer ga jij naar Antwerpen?",note:null},
+  // WORD ORDER
+  {num:25,group:"word-order",tags:["all-tenses","word-order"],level:"A1",title:"Starting with when/where — inversion",structure:`${S("when/where/why")} + ${S("conjugated verb")} + ${S("who")} + ${S("rest")}`,example:"Nu woon ik in Engeland. / Gisteren heb ik geoefend. / Morgen ga ik naar Antwerpen.",note:"<strong>The conjugated verb always stays in position 2.</strong> Works in every tense."},
+  {num:26,group:"word-order",tags:["all-tenses","word-order","modal","separable"],level:"A2",title:"Separable verb with a modal",structure:`${S("who")} + ${S("kan/wil/moet")} + ${S("detail")} + ${S("prefix")}${S("action")}`,example:"Ik wil hem opbellen. / Ze moet het schoonmaken.",note:"With a modal the separable verb <strong>stays together</strong> at the end."},
+  // QUESTIONS
+  {num:27,group:"question",tags:["all-tenses","question"],level:"A1",title:"Suggestion — zullen we",structure:`${F("Zullen we")} + ${S("action")}?`,example:"Zullen we pauze nemen? / Zullen we dat herhalen?",note:"Fixed phrase. Very useful in classroom settings."},
+  {num:28,group:"question",tags:["all-tenses","question","subordinate","that"],level:"A2",title:"Indirect question — of (whether)",structure:`${S("who")} + ${F("vraag me af of")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}`,example:"Ik vraag me af of hij komt. / Ze vraagt zich af of het moeilijk is.",note:"<strong>of</strong> (whether/if) is subordinating — verb goes to the very end."},
+  // SUBORDINATE
+  {num:29,group:"subordinate",tags:["all-tenses","subordinate","because"],level:"A1",title:"Because — want (no reshuffle)",structure:`${S("statement")}, ${C("want")} ${S("who")} + ${S("verb")} + ${S("rest")}`,example:"Ik oefen hard, want ik wil hem verrassen.",note:"<strong>want</strong> is coordinating — normal word order continues. Easier than omdat at A1."},
+  {num:30,group:"subordinate",tags:["all-tenses","subordinate","because"],level:"A1",title:"Because — omdat (verb to end)",structure:`${S("statement")}, ${C("omdat")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}`,example:"Ze lacht, omdat ze hem ziet.",note:"<strong>omdat</strong> is subordinating — verb goes to the very end."},
+  {num:31,group:"subordinate",tags:["all-tenses","subordinate","that"],level:"A1",title:"That — dat (verb to end)",structure:`${S("who")} + ${S("verb")} + ${C("dat")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}`,example:"Ik weet dat hij Antwerpenaar is. / Ze zegt dat ze Nederlands leert.",note:"<strong>dat</strong> sends the verb to the end. Use to report what someone says or knows."},
+  {num:32,group:"subordinate",tags:["all-tenses","subordinate","if"],level:"A1",title:"If/when — als (condition or habit)",structure:`${C("Als")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}, + ${S("verb")} + ${S("who")} + ${S("rest")}`,example:"Als ik hem mis, stuur ik een berichtje.",note:"<strong>als</strong> = if or when (repeated/habitual). Verb to end in the als-clause; main clause inverts."},
+  {num:33,group:"subordinate",tags:["past","subordinate","when"],level:"A2",title:"When — toen (single past event)",structure:`${C("Toen")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}, + ${S("verb")} + ${S("who")} + ${S("rest")}`,example:"Toen ik hem zag, wist ik het al.",note:"<strong>toen</strong> = when (one specific past moment only). Use als for repeated events."},
+  {num:34,group:"subordinate",tags:["all-tenses","subordinate","while"],level:"A2",title:"While — terwijl (simultaneous)",structure:`${S("statement")}, ${C("terwijl")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}`,example:"Ze luistert naar podcasts, terwijl ze kookt.",note:"<strong>terwijl</strong> = while (same time). Verb goes to end of the terwijl-clause."},
+  {num:35,group:"subordinate",tags:["all-tenses","subordinate","so-that"],level:"B1",title:"So that — zodat (intended result)",structure:`${S("statement")}, ${C("zodat")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}`,example:"Ik oefen hard, zodat ik hem kan verrassen.",note:"<strong>zodat</strong> = so that. Modal + infinitive cluster at the very end."},
+  {num:36,group:"subordinate",tags:["all-tenses","subordinate","although"],level:"B1",title:"Although — hoewel",structure:`${C("Hoewel")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}, + ${S("verb")} + ${S("who")} + ${S("rest")}`,example:"Hoewel het moeilijk is, geef ik niet op.",note:"<strong>hoewel</strong> = although. Main clause inverts after the hoewel-clause."},
+  {num:37,group:"subordinate",tags:["all-tenses","subordinate","inorder"],level:"A2",title:"In order to — om … te",structure:`${S("statement")}, ${C("om")} + ${S("rest")} + ${C("te")} + ${S("action")}`,example:"Ik leer Nederlands, om met zijn familie te praten.",note:"<strong>om…te</strong> = purpose. Separable: om op te bellen (te slots between prefix and stem)."},
+  {num:38,group:"subordinate",tags:["all-tenses","word-order","therefore"],level:"A2",title:"Therefore — dus (triggers inversion)",structure:`${S("statement")}. ${C("Dus")} + ${S("verb")} + ${S("who")} + ${S("rest")}`,example:"Ik oefen elke dag. Dus word ik beter.",note:"<strong>dus</strong> triggers inversion — verb in position 2 after dus. <strong>want and dus</strong> do NOT send verb to end."},
+  {num:39,group:"subordinate",tags:["all-tenses","subordinate","if"],level:"B1",title:"Unless — tenzij",structure:`${S("statement")}, ${C("tenzij")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}`,example:"Ik bel hem op, tenzij hij slaapt.",note:"<strong>tenzij</strong> = unless. Subordinating — verb goes to the end."},
+  {num:40,group:"subordinate",tags:["all-tenses","subordinate","that"],level:"A2",title:"Relative clause — die/dat",structure:`${S("the noun")} + ${C("die/dat")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}`,example:"De man die ze kent, is Antwerpenaar. / Het boek dat ik lees, is interessant.",note:"<strong>die</strong> for de-words and plurals; <strong>dat</strong> for het-words. Verb to end of the clause."},
+  {num:41,group:"subordinate",tags:["all-tenses","subordinate","because","that","if","so-that","although","while","inorder"],level:"A1",title:"Verb-to-end — subordinate summary",structure:`${C("dat/omdat/als/terwijl/zodat/hoewel/tenzij/om…te")}<br>+ ${S("who")} + ${S("object/rest")} + ${S("verb — to end")}`,example:"… dat ze Nederlands leert. / … omdat ze oefent. / … als het moeilijk is.",note:"All subordinating conjunctions send the verb to the end. <strong>want and dus do not.</strong>"},
+  // CLASSROOM PHRASES
+  {num:42,group:"classroom",tags:["classroom"],level:"A0",title:"I don't understand",structure:`${F("Ik begrijp het niet.")}`,example:"Ik begrijp het niet.",note:"The simplest and most essential classroom phrase."},
+  {num:43,group:"classroom",tags:["classroom"],level:"A0",title:"Can you repeat that?",structure:`${F("Kunt u dat herhalen?")} / ${F("Kun jij dat herhalen?")}`,example:"Kunt u dat herhalen, alstublieft?",note:"<strong>u</strong> is more formal (to a teacher); <strong>jij</strong> is for classmates."},
+  {num:44,group:"classroom",tags:["classroom"],level:"A0",title:"How do you say … in Dutch?",structure:`${F("Hoe zeg je")} + ${S("word/phrase")} + ${F("in het Nederlands?")}`,example:"Hoe zeg je 'because' in het Nederlands?",note:null},
+  {num:45,group:"classroom",tags:["classroom"],level:"A0",title:"What does … mean?",structure:`${F("Wat betekent")} + ${S("word")}${F("?")}`,example:"Wat betekent 'hoewel'?",note:null},
+  {num:46,group:"classroom",tags:["classroom"],level:"A0",title:"Can you speak more slowly?",structure:`${F("Kunt u langzamer spreken, alstublieft?")}`,example:"Kunt u een beetje langzamer spreken?",note:"Add <strong>een beetje</strong> (a little) to soften the request."},
+  {num:47,group:"classroom",tags:["classroom"],level:"A0",title:"I don't know",structure:`${F("Ik weet het niet.")}`,example:"Ik weet het niet, sorry.",note:null},
+  {num:48,group:"classroom",tags:["classroom"],level:"A1",title:"I think that …",structure:`${F("Ik denk dat")} + ${S("who")} + ${S("rest")} + ${S("verb — to end")}`,example:"Ik denk dat het moeilijk is.",note:"<strong>dat</strong> is subordinating — verb goes to the end of the clause."},
+  {num:49,group:"classroom",tags:["classroom"],level:"A1",title:"In my opinion …",structure:`${F("Volgens mij")} + ${S("verb")} + ${S("who")} + ${S("rest")}`,example:"Volgens mij is dat niet correct.",note:"<strong>Volgens mij</strong> triggers inversion — verb stays in position 2."},
+  {num:50,group:"classroom",tags:["classroom"],level:"A1",title:"How do you spell that?",structure:`${F("Hoe schrijf je dat?")}`,example:"Hoe schrijf je dat?",note:null},
+  {num:51,group:"classroom",tags:["classroom"],level:"A1",title:"I agree / I disagree",structure:`${F("Ik ben het eens.")} / ${F("Ik ben het niet eens.")}`,example:"Ik ben het eens met jou. / Ik ben het daar niet mee eens.",note:"The full phrase is <strong>het ergens mee eens zijn</strong> — to agree with something."},
+  {num:52,group:"classroom",tags:["classroom"],level:"A1",title:"Can I ask a question?",structure:`${F("Mag ik een vraag stellen?")}`,example:"Mag ik een vraag stellen?",note:"<strong>stellen</strong> is the formal verb for asking a question. <strong>vragen</strong> also works."},
+];
+
+const TENSE_TAGS = new Set(["present","past","future"]);
+const sections = [
+  {key:"present",label:"Present",anchor:"present"},
+  {key:"past",label:"Past",anchor:"past"},
+  {key:"future",label:"Future",anchor:"future"},
+  {key:"word-order",label:"Word order — all tenses",anchor:"word-order"},
+  {key:"question",label:"Questions — all tenses",anchor:"questions"},
+  {key:"subordinate",label:"Subordinate clauses — connectors",anchor:"connectors"},
+  {key:"classroom",label:"Classroom phrases",anchor:"classroom"},
+];
+
+const tagMeta={
+  "present":{label:"Present",cls:"ct-present"},
+  "past":{label:"Past",cls:"ct-past"},
+  "future":{label:"Future",cls:"ct-future"},
+  "all-tenses":{label:"All tenses",cls:"ct-all-tenses"},
+  "statement":{label:"Statement",cls:"ct-statement"},
+  "question":{label:"Question",cls:"ct-question"},
+  "negation":{label:"Negation",cls:"ct-negation"},
+  "modal":{label:"Modal",cls:"ct-modal"},
+  "separable":{label:"Separable",cls:"ct-separable"},
+  "opinion":{label:"Opinion",cls:"ct-opinion"},
+  "word-order":{label:"Word order",cls:"ct-word-order"},
+  "subordinate":{label:"Subordinate",cls:"ct-subordinate"},
+  "classroom":{label:"Classroom",cls:"ct-classroom"},
+  "because":{label:"because",cls:"ct-because"},
+  "if":{label:"if",cls:"ct-if"},
+  "when":{label:"when",cls:"ct-when"},
+  "while":{label:"while",cls:"ct-while"},
+  "that":{label:"that",cls:"ct-that"},
+  "so-that":{label:"so that",cls:"ct-so-that"},
+  "although":{label:"although",cls:"ct-although"},
+  "therefore":{label:"therefore",cls:"ct-therefore"},
+  "inorder":{label:"in order to",cls:"ct-inorder"},
+};
+
+const levelStyle={
+  "A0":"background:#e8e8f0;color:#4a4a6a;",
+  "A1":"background:rgba(166,197,234,0.35);color:#294E72;",
+  "A2":"background:rgba(192,191,135,0.40);color:#1a5c3a;",
+  "B1":"background:rgba(216,191,216,0.40);color:#733B40;",
+  "B2":"background:rgba(243,214,176,0.50);color:#5c3d00;",
+  "C1":"background:rgba(107,63,160,0.12);color:#3a1a5c;"
+};
+
+let activeTags = new Set();
+
+function cardMatches(s){
+  if(activeTags.size===0) return true;
+  for(const t of activeTags){
+    if(TENSE_TAGS.has(t)){
+      if(!s.tags.includes(t) && !s.tags.includes("all-tenses")) return false;
+    } else {
+      if(!s.tags.includes(t)) return false;
+    }
+  }
+  return true;
+}
+
+function buildCard(s, delay){
+  const card = document.createElement("div");
+  card.className = "card";
+  card.id = "p"+s.num;
+  card.dataset.group = s.group;
+  card.dataset.id = s.num;
+  card.style.animationDelay = (delay*0.032)+"s";
+  const tagsHtml = s.tags.map(t=>{
+    const m=tagMeta[t]||{label:t,cls:"ct-all-tenses"};
+    return `<span class="ctag ${m.cls}">${m.label}</span>`;
+  }).join("");
+  const lvlStyle = levelStyle[s.level]||"";
+  const structHtml = s.structure.replace(/
+/g,"<br>");
+  const exLink = `<a class="example-link" href="learn.html" title="See example sentences">Example sentences</a>`;
+  card.innerHTML=`
+    <div class="card-top">
+      <span class="card-num">${String(s.num).padStart(2,"0")}</span>
+      <span class="level-badge" style="${lvlStyle};border:1px solid rgba(0,0,0,0.12)">${s.level}</span>
+    </div>
+    <div class="card-title">${s.title}</div>
+    <div class="card-structure">${structHtml}</div>
+    ${s.example?`<div class="card-example"><span>${s.example}</span></div>`:""}
+    ${s.note?`<div class="card-note">${s.note}</div>`:""}
+    <div class="card-tags">${tagsHtml}</div>
+    ${s.group!=="classroom"?exLink:""}
+  `;
+  return card;
+}
+
+function renderAll(){
+  const root = document.getElementById("sections-root");
+  root.innerHTML = "";
+  sections.forEach(sec=>{
+    const wrap = document.createElement("div");
+    wrap.className = "section-wrap";
+    wrap.id = "secwrap-"+sec.key;
+    const header = document.createElement("div");
+    header.className = "section-header";
+    header.id = sec.anchor;
+    header.innerHTML = `<h2>${sec.label}</h2>`;
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    grid.id = "grid-"+sec.key;
+    structures.filter(s=>s.group===sec.key).forEach((s,i)=>grid.appendChild(buildCard(s,i)));
+    wrap.appendChild(header);
+    wrap.appendChild(grid);
+    root.appendChild(wrap);
+  });
+}
+
+function applyFilters(){
+  let visible = 0;
+  structures.forEach(s=>{
+    const card = document.getElementById("p"+s.num);
+    if(!card) return;
+    const match = cardMatches(s);
+    card.classList.toggle("hidden",!match);
+    if(match) visible++;
+  });
+  sections.forEach(sec=>{
+    const wrap = document.getElementById("secwrap-"+sec.key);
+    if(!wrap) return;
+    const any = structures.filter(s=>s.group===sec.key).some(s=>cardMatches(s));
+    wrap.classList.toggle("hidden",!any);
+  });
+  document.getElementById("empty").classList.toggle("show",visible===0);
+  updateCount(visible);
+}
+
+function updateCount(visible){
+  const total = structures.length;
+  const el = document.getElementById("count");
+  if(activeTags.size===0){
+    el.innerHTML=`Showing all <strong>${total}</strong> structures`;
+  } else {
+    const labels=[...activeTags].map(t=>tagMeta[t]?.label||t).join(" + ");
+    el.innerHTML=`<strong>${visible}</strong> of ${total} match <em>${labels}</em>`;
+  }
+}
+
+document.querySelectorAll(".tag-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const tag = btn.dataset.tag;
+    if(activeTags.has(tag)){activeTags.delete(tag);btn.classList.remove("active");}
+    else{activeTags.add(tag);btn.classList.add("active");}
+    applyFilters();
+  });
+});
+
+function clearAll(){
+  activeTags.clear();
+  document.querySelectorAll(".tag-btn").forEach(b=>b.classList.remove("active"));
+  applyFilters();
+}
+
+// Handle hash anchors
+function handleHash(){
+  const hash = window.location.hash.slice(1);
+  if(!hash) return;
+  // Check if it's a pattern ID (p1, p2 etc)
+  if(hash.match(/^p\d+$/)){
+    setTimeout(()=>{
+      const el = document.getElementById(hash);
+      if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+    }, 100);
+  } else {
+    // section anchor
+    setTimeout(()=>{
+      const el = document.getElementById(hash);
+      if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+    }, 100);
+  }
+}
+
+renderAll();
+updateCount(structures.length);
+handleHash();
+</script>
+</body>
+</html>

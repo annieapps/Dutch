@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Irregular Verbs — Annie Leert Nederlands</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@500;600&display=swap');
+:root{--scheldt-blue:#294E72;--brothers-green:#016935;--croissant:#FFA500;--burgundy:#733B40;--castle-grey:#6B6B6B;--charcoal:#1c1d24;--north-country:#A6C5EA;--bitten-croissant:#F3D6B0;--oat-milk:#F6F7F6;--fog:#CBCAD0;--bg:#F6F7F6;--surface:#fff;--border:#CBCAD0;--ink:#1c1d24;--muted:#6B6B6B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:"Source Sans 3",sans-serif;font-weight:300;min-height:100vh;font-size:16px;line-height:1.5;}
+.topnav{background:var(--charcoal);display:flex;align-items:center;gap:0;padding:0 2rem;height:48px;position:sticky;top:0;z-index:20;}
+.topnav-home{font-family:"Playfair Display",serif;font-size:.95rem;font-weight:700;color:var(--oat-milk);text-decoration:none;margin-right:1.5rem;white-space:nowrap;}
+.topnav-home em{color:var(--north-country);font-style:italic;}
+.topnav-links{display:flex;gap:0;flex:1;}
+.topnav-link{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:var(--fog);text-decoration:none;padding:0 1rem;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:color .15s;white-space:nowrap;}
+.topnav-link:hover{color:var(--north-country);}
+.topnav-link.active{color:var(--oat-milk);border-bottom-color:var(--north-country);}
+header{background:var(--charcoal);color:var(--oat-milk);padding:2.2rem 2rem 1.8rem;position:relative;overflow:hidden;}
+header::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(255,165,0,0.12) 0%,transparent 70%);pointer-events:none;}
+header h1{font-family:"Playfair Display",serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;position:relative;color:var(--oat-milk);}
+header h1 em{color:var(--north-country);font-style:italic;}
+.header-sub{margin-top:.4rem;font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;color:var(--fog);position:relative;}
+.controls-wrap{background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:48px;z-index:10;box-shadow:0 2px 8px rgba(28,29,36,0.06);}
+.controls{max-width:1140px;margin:0 auto;padding:.75rem 2rem;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;}
+.filter-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:600;margin-right:.2rem;flex-shrink:0;}
+.filter-btn{background:transparent;border:1.5px solid var(--border);color:var(--muted);padding:.22rem .75rem;border-radius:2rem;font-family:"Source Sans 3",sans-serif;font-size:.76rem;cursor:pointer;transition:all .15s;font-weight:400;white-space:nowrap;}
+.filter-btn:hover{border-color:var(--scheldt-blue);color:var(--scheldt-blue);}
+.filter-btn.active{background:var(--scheldt-blue);color:var(--oat-milk);border-color:var(--scheldt-blue);font-weight:600;}
+.verb-search{margin-left:auto;font-family:"Source Sans 3",sans-serif;font-size:.82rem;padding:.28rem .85rem;border:1.5px solid var(--border);border-radius:2rem;background:var(--bg);color:var(--ink);width:200px;outline:none;transition:border-color .18s;}
+.verb-search:focus{border-color:var(--scheldt-blue);}
+.verb-search::placeholder{color:var(--muted);}
+.legend{max-width:1140px;margin:.8rem auto .2rem;padding:0 2rem;display:flex;gap:1.2rem;flex-wrap:wrap;font-size:.75rem;color:var(--muted);align-items:center;}
+.vbadge{display:inline-block;font-size:.64rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:.1rem .42rem;border-radius:3px;}
+.vbadge-ovt{background:rgba(166,197,234,0.35);color:var(--scheldt-blue);border:1px solid rgba(41,78,114,0.2);}
+.vbadge-vd{background:rgba(192,191,135,0.40);color:var(--brothers-green);border:1px solid rgba(1,105,53,0.2);}
+.table-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:6px;overflow:hidden;max-width:1140px;margin:.5rem 2rem 3rem;overflow-x:auto;}
+.verb-table{width:100%;border-collapse:collapse;font-size:.87rem;}
+.verb-table thead tr{background:var(--charcoal);color:var(--oat-milk);}
+.verb-table thead th{padding:.65rem 1rem;text-align:left;font-family:"Source Sans 3",sans-serif;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;}
+.verb-table tbody tr{border-bottom:1px solid var(--border);transition:background .12s;}
+.verb-table tbody tr:last-child{border-bottom:none;}
+.verb-table tbody tr:hover{background:rgba(166,197,234,0.08);}
+.verb-table tbody tr.v-hidden{display:none;}
+.verb-group-header td{font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);padding:.32rem 1rem;background:var(--bg);border-bottom:1px solid var(--border);}
+.verb-table td{padding:.6rem 1rem;vertical-align:top;}
+.v-nl{font-family:"Source Code Pro",monospace;font-weight:600;font-size:.92rem;color:var(--ink);}
+.v-en{font-size:.72rem;color:var(--muted);margin-top:.1rem;font-style:italic;}
+.v-form{font-family:"Source Code Pro",monospace;font-size:.86rem;color:var(--scheldt-blue);}
+.v-form-secondary{font-family:"Source Code Pro",monospace;font-size:.78rem;color:var(--muted);margin-top:.08rem;}
+.v-form-vd{font-family:"Source Code Pro",monospace;font-size:.86rem;color:var(--brothers-green);}
+.v-note{font-size:.73rem;color:var(--muted);line-height:1.55;max-width:210px;}
+.v-aux{font-size:.8rem;color:var(--ink);}
+.v-aux em{color:var(--burgundy);font-style:italic;}
+.no-results{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-style:italic;display:none;font-size:.88rem;}
+footer{text-align:center;padding:1.6rem 2rem;color:var(--muted);font-size:.76rem;border-top:1px solid var(--border);letter-spacing:.06em;font-style:italic;}
+@media(max-width:700px){.verb-table thead th:nth-child(4),.verb-table td:nth-child(4){display:none;}.verb-search{width:100%;margin-left:0;margin-top:.4rem;}.table-wrap{margin-left:1rem;margin-right:1rem;}.topnav-links .topnav-link:not(.active){display:none;}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="topnav-home" href="index.html">Annie leert <em>Nederlands</em></a>
+  <div class="topnav-links">
+    <a class="topnav-link" href="learn.html">📖 Learn</a>
+    <a class="topnav-link" href="revise.html">🃏 Revise</a>
+    <a class="topnav-link" href="structures.html">💬 Conversation</a>
+    <a class="topnav-link active" href="verbs.html">📋 Verbs</a>
+  </div>
+</nav>
+<header>
+  <h1>Irregular <em>Verbs</em></h1>
+  <p class="header-sub">Strong · modal · mixed · hebben vs zijn · Belgian Dutch notes</p>
+</header>
+<div class="controls-wrap">
+  <div class="controls">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-vfilter="all">All</button>
+    <button class="filter-btn" data-vfilter="strong">Strong (ablaut)</button>
+    <button class="filter-btn" data-vfilter="modal">Modals</button>
+    <button class="filter-btn" data-vfilter="mixed">Mixed / Suppletive</button>
+    <button class="filter-btn" data-vfilter="hebben">hebben vs zijn</button>
+    <input class="verb-search" type="text" placeholder="Search verb or meaning…" id="verbSearch">
+  </div>
+</div>
+<div class="legend">
+  <span style="display:flex;align-items:center;gap:.35rem;"><span class="vbadge vbadge-ovt">OVT</span> Onvoltooid verleden tijd — simple past</span>
+  <span style="display:flex;align-items:center;gap:.35rem;"><span class="vbadge vbadge-vd">VD</span> Voltooid deelwoord — past participle</span>
+  <span><em>zijn*</em> = takes zijn as auxiliary</span>
+</div>
+<div class="table-wrap">
+  <table class="verb-table" id="verbTable">
+    <thead>
+      <tr>
+        <th>Infinitive</th>
+        <th><span class="vbadge vbadge-ovt">OVT</span> Simple past</th>
+        <th><span class="vbadge vbadge-vd">VD</span> Past participle</th>
+        <th>Auxiliary</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody id="verbBody"></tbody>
+  </table>
+  <div class="no-results" id="noResults">No verbs match your search.</div>
+</div>
+<footer>Veel succes, lieve Annie 🌷 — Antwerpen wacht op je</footer>
+<script>
+const verbs = [
+  // === STRONG VERBS – vowel change (ablaut) ===
+  { group: "Strong – ij / ee", cat: "strong", nl: "rijden", en: "to drive/ride", ovt: "reed", ovt2: "", vd: "gereden", aux: "hebben", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "schrijven", en: "to write", ovt: "schreef", ovt2: "", vd: "geschreven", aux: "hebben", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "blijven", en: "to stay", ovt: "bleef", ovt2: "", vd: "gebleven", aux: "zijn", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "snijden", en: "to cut", ovt: "sneed", ovt2: "", vd: "gesneden", aux: "hebben", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "lijken", en: "to seem/look like", ovt: "leek", ovt2: "", vd: "geleken", aux: "hebben", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "stijgen", en: "to rise/climb", ovt: "steeg", ovt2: "", vd: "gestegen", aux: "zijn", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "kijken", en: "to look/watch", ovt: "keek", ovt2: "", vd: "gekeken", aux: "hebben", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "wijzen", en: "to point/show", ovt: "wees", ovt2: "", vd: "gewezen", aux: "hebben", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "krijgen", en: "to get/receive", ovt: "kreeg", ovt2: "", vd: "gekregen", aux: "hebben", note: "" },
+  { group: "Strong – ij / ee", cat: "strong", nl: "zwijgen", en: "to be silent", ovt: "zweeg", ovt2: "", vd: "gezwegen", aux: "hebben", note: "" },
+
+  { group: "Strong – ie / o", cat: "strong", nl: "vliegen", en: "to fly", ovt: "vloog", ovt2: "", vd: "gevlogen", aux: "zijn / hebben", note: "zijn for travel; hebben for action" },
+  { group: "Strong – ie / o", cat: "strong", nl: "gieten", en: "to pour", ovt: "goot", ovt2: "", vd: "gegoten", aux: "hebben", note: "" },
+  { group: "Strong – ie / o", cat: "strong", nl: "bieden", en: "to offer/bid", ovt: "bood", ovt2: "", vd: "geboden", aux: "hebben", note: "" },
+  { group: "Strong – ie / o", cat: "strong", nl: "verbieden", en: "to forbid", ovt: "verbood", ovt2: "", vd: "verboden", aux: "hebben", note: "" },
+  { group: "Strong – ie / o", cat: "strong", nl: "kiezen", en: "to choose", ovt: "koos", ovt2: "", vd: "gekozen", aux: "hebben", note: "" },
+  { group: "Strong – ie / o", cat: "strong", nl: "schieten", en: "to shoot", ovt: "schoot", ovt2: "", vd: "geschoten", aux: "hebben", note: "" },
+  { group: "Strong – ie / o", cat: "strong", nl: "verliezen", en: "to lose", ovt: "verloor", ovt2: "", vd: "verloren", aux: "hebben", note: "" },
+
+  { group: "Strong – ui / oo", cat: "strong", nl: "kruipen", en: "to crawl/creep", ovt: "kroop", ovt2: "", vd: "gekropen", aux: "zijn", note: "" },
+  { group: "Strong – ui / oo", cat: "strong", nl: "sluipen", en: "to sneak", ovt: "sloop", ovt2: "", vd: "geslopen", aux: "zijn", note: "" },
+  { group: "Strong – ui / oo", cat: "strong", nl: "buigen", en: "to bend/bow", ovt: "boog", ovt2: "", vd: "gebogen", aux: "hebben", note: "" },
+  { group: "Strong – ui / oo", cat: "strong", nl: "ruiken", en: "to smell", ovt: "rook", ovt2: "", vd: "geroken", aux: "hebben", note: "" },
+  { group: "Strong – ui / oo", cat: "strong", nl: "zuigen", en: "to suck/vacuum", ovt: "zoog", ovt2: "", vd: "gezogen", aux: "hebben", note: "" },
+
+  { group: "Strong – e / a / o", cat: "strong", nl: "helpen", en: "to help", ovt: "hielp", ovt2: "", vd: "geholpen", aux: "hebben", note: "" },
+  { group: "Strong – e / a / o", cat: "strong", nl: "zetten → zat", cat2: "strong", nl: "sterven", en: "to die", ovt: "stierf", ovt2: "", vd: "gestorven", aux: "zijn", note: "" },
+  { group: "Strong – e / a / o", cat: "strong", nl: "werpen", en: "to throw", ovt: "wierp", ovt2: "", vd: "geworpen", aux: "hebben", note: "" },
+  { group: "Strong – e / a / o", cat: "strong", nl: "werven", en: "to recruit", ovt: "wierf", ovt2: "", vd: "geworven", aux: "hebben", note: "" },
+  { group: "Strong – e / a / o", cat: "strong", nl: "bergen", en: "to store/rescue", ovt: "borg", ovt2: "", vd: "geborgen", aux: "hebben", note: "" },
+
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "binden", en: "to bind/tie", ovt: "bond", ovt2: "", vd: "gebonden", aux: "hebben", note: "" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "vinden", en: "to find", ovt: "vond", ovt2: "", vd: "gevonden", aux: "hebben", note: "" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "winnen", en: "to win", ovt: "won", ovt2: "", vd: "gewonnen", aux: "hebben", note: "" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "beginnen", en: "to begin", ovt: "begon", ovt2: "", vd: "begonnen", aux: "zijn", note: "no ge- prefix (begins with be-)" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "drinken", en: "to drink", ovt: "dronk", ovt2: "", vd: "gedronken", aux: "hebben", note: "" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "zingen", en: "to sing", ovt: "zong", ovt2: "", vd: "gezongen", aux: "hebben", note: "" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "springen", en: "to jump", ovt: "sprong", ovt2: "", vd: "gesprongen", aux: "zijn", note: "" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "klinken", en: "to sound/clink", ovt: "klonk", ovt2: "", vd: "geklonken", aux: "hebben", note: "" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "zwemmen", en: "to swim", ovt: "zwom", ovt2: "", vd: "gezwommen", aux: "zijn / hebben", note: "zijn for travel" },
+  { group: "Strong – i / a / o (class III)", cat: "strong", nl: "klimmen", en: "to climb", ovt: "klom", ovt2: "", vd: "geklommen", aux: "zijn", note: "" },
+
+  { group: "Strong – a / ie", cat: "strong", nl: "laten", en: "to let/leave", ovt: "liet", ovt2: "", vd: "gelaten", aux: "hebben", note: "" },
+  { group: "Strong – a / ie", cat: "strong", nl: "slapen", en: "to sleep", ovt: "sliep", ovt2: "", vd: "geslapen", aux: "hebben", note: "" },
+  { group: "Strong – a / ie", cat: "strong", nl: "lopen", en: "to walk/run", ovt: "liep", ovt2: "", vd: "gelopen", aux: "zijn / hebben", note: "zijn for displacement" },
+  { group: "Strong – a / ie", cat: "strong", nl: "roepen", en: "to call/shout", ovt: "riep", ovt2: "", vd: "geroepen", aux: "hebben", note: "" },
+  { group: "Strong – a / ie", cat: "strong", nl: "houden", en: "to hold/keep", ovt: "hield", ovt2: "", vd: "gehouden", aux: "hebben", note: "" },
+
+  { group: "Strong – other", cat: "strong", nl: "dragen", en: "to carry/wear", ovt: "droeg", ovt2: "", vd: "gedragen", aux: "hebben", note: "" },
+  { group: "Strong – other", cat: "strong", nl: "vragen", en: "to ask", ovt: "vroeg", ovt2: "", vd: "gevraagd", aux: "hebben", note: "Weak VD! Mixed verb" },
+  { group: "Strong – other", cat: "strong", nl: "graven", en: "to dig", ovt: "groef", ovt2: "", vd: "gegraven", aux: "hebben", note: "" },
+  { group: "Strong – other", cat: "strong", nl: "wassen", en: "to wash/grow", ovt: "waste / wies", ovt2: "", vd: "gewassen", aux: "hebben", note: "Two meanings, both strong" },
+  { group: "Strong – other", cat: "strong", nl: "vallen", en: "to fall", ovt: "viel", ovt2: "", vd: "gevallen", aux: "zijn", note: "" },
+
+  // === MODAL VERBS ===
+  { group: "Modal verbs", cat: "modal", nl: "kunnen", en: "can / to be able", ovt: "kon", ovt2: "konden (pl.)", vd: "gekund", aux: "hebben", note: "Infinitive as VD when with another verb: hebben kunnen" },
+  { group: "Modal verbs", cat: "modal", nl: "mogen", en: "may / to be allowed", ovt: "mocht", ovt2: "mochten (pl.)", vd: "gemogen", aux: "hebben", note: "Infinitive VD: hebben mogen" },
+  { group: "Modal verbs", cat: "modal", nl: "moeten", en: "must / to have to", ovt: "moest", ovt2: "moesten (pl.)", vd: "gemoeten", aux: "hebben", note: "Infinitive VD: hebben moeten" },
+  { group: "Modal verbs", cat: "modal", nl: "willen", en: "to want", ovt: "wou / wilde", ovt2: "wouden / wilden (pl.)", vd: "gewild", aux: "hebben", note: "wou more informal/spoken" },
+  { group: "Modal verbs", cat: "modal", nl: "zullen", en: "shall / will", ovt: "zou", ovt2: "zouden (pl.)", vd: "(no VD used)", aux: "—", note: "Future/conditional auxiliary; no past participle in use" },
+  { group: "Modal verbs", cat: "modal", nl: "mogen", en: "may / to be allowed", ovt: "mocht", ovt2: "", vd: "gemogen", aux: "hebben", note: "" },
+
+  // === SUPPLETIVE / HIGHLY IRREGULAR ===
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "zijn", en: "to be", ovt: "was", ovt2: "waren (pl.)", vd: "geweest", aux: "zijn", note: "Completely suppletive; essential auxiliary" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "hebben", en: "to have", ovt: "had", ovt2: "hadden (pl.)", vd: "gehad", aux: "hebben", note: "Primary auxiliary for perfect tenses" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "worden", en: "to become", ovt: "werd", ovt2: "werden (pl.)", vd: "geworden", aux: "zijn", note: "Also passive auxiliary (wordt geslagen)" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "gaan", en: "to go", ovt: "ging", ovt2: "gingen (pl.)", vd: "gegaan", aux: "zijn", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "staan", en: "to stand", ovt: "stond", ovt2: "stonden (pl.)", vd: "gestaan", aux: "hebben", note: "Belgisch: zijn gestaan" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "zien", en: "to see", ovt: "zag", ovt2: "zagen (pl.)", vd: "gezien", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "doen", en: "to do", ovt: "deed", ovt2: "deden (pl.)", vd: "gedaan", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "komen", en: "to come", ovt: "kwam", ovt2: "kwamen (pl.)", vd: "gekomen", aux: "zijn", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "weten", en: "to know (fact)", ovt: "wist", ovt2: "wisten (pl.)", vd: "geweten", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "denken", en: "to think", ovt: "dacht", ovt2: "dachten (pl.)", vd: "gedacht", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "brengen", en: "to bring", ovt: "bracht", ovt2: "brachten (pl.)", vd: "gebracht", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "kopen", en: "to buy", ovt: "kocht", ovt2: "kochten (pl.)", vd: "gekocht", aux: "hebben", note: "Mixed: strong OVT, weak VD" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "zoeken", en: "to search/look for", ovt: "zocht", ovt2: "zochten (pl.)", vd: "gezocht", aux: "hebben", note: "Mixed" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "werken → werkte", cat2: "", nl2: "liggen", en: "to lie (down)", ovt: "lag", ovt2: "lagen (pl.)", vd: "gelegen", aux: "hebben", note: "Belgisch: zijn gelegen" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "zitten", en: "to sit", ovt: "zat", ovt2: "zaten (pl.)", vd: "gezeten", aux: "hebben", note: "Belgisch: zijn gezeten" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "lezen", en: "to read", ovt: "las", ovt2: "lazen (pl.)", vd: "gelezen", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "eten", en: "to eat", ovt: "at", ovt2: "aten (pl.)", vd: "gegeten", aux: "hebben", note: "OVT singular looks like English!" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "geven", en: "to give", ovt: "gaf", ovt2: "gaven (pl.)", vd: "gegeven", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "nemen", en: "to take", ovt: "nam", ovt2: "namen (pl.)", vd: "genomen", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "spreken", en: "to speak", ovt: "sprak", ovt2: "spraken (pl.)", vd: "gesproken", aux: "hebben", note: "" },
+  { group: "Suppletive / highly irregular", cat: "mixed", nl: "breken", en: "to break", ovt: "brak", ovt2: "braken (pl.)", vd: "gebroken", aux: "zijn / hebben", note: "zijn = intransitive (het glas brak)" },
+
+  // === HEBBEN / ZIJN PAIRS ===
+  { group: "hebben vs zijn (context-dependent)", cat: "hebben", nl: "rijden", en: "to drive/ride", ovt: "reed", ovt2: "", vd: "gereden", aux: "hebben / zijn", note: "zijn: ik ben naar huis gereden\nhebben: ik heb de auto gereden" },
+  { group: "hebben vs zijn (context-dependent)", cat: "hebben", nl: "vliegen", en: "to fly", ovt: "vloog", ovt2: "", vd: "gevlogen", aux: "zijn / hebben", note: "zijn: ik ben gevlogen\nhebben: de piloot heeft gevlogen" },
+  { group: "hebben vs zijn (context-dependent)", cat: "hebben", nl: "lopen", en: "to walk", ovt: "liep", ovt2: "", vd: "gelopen", aux: "zijn / hebben", note: "zijn: ik ben naar huis gelopen\nhebben: ik heb een uur gelopen" },
+  { group: "hebben vs zijn (context-dependent)", cat: "hebben", nl: "zwemmen", en: "to swim", ovt: "zwom", ovt2: "", vd: "gezwommen", aux: "zijn / hebben", note: "zijn: ik ben over het kanaal gezwommen\nhebben: ik heb gezwommen" },
+];
+const seenV = new Set();
+const cleanVerbs = verbs.filter(v=>{
+  const key = v.nl+"|"+v.group;
+  if(seenV.has(key)) return false;
+  seenV.add(key);
+  return true;
+});
+
+function renderTable(data){
+  const body = document.getElementById("verbBody");
+  body.innerHTML = "";
+  let lastGroup = null;
+  data.forEach(v=>{
+    if(v.group !== lastGroup){
+      const gr = document.createElement("tr");
+      gr.className = "verb-group-header";
+      gr.innerHTML = `<td colspan="5">${v.group}</td>`;
+      body.appendChild(gr);
+      lastGroup = v.group;
+    }
+    const tr = document.createElement("tr");
+    const auxHtml = v.aux.includes("zijn") ? v.aux.replace(/zijn/g,"<em>zijn*</em>") : v.aux;
+    const ovtHtml = v.ovt2
+      ? `<div class="v-form">${v.ovt}</div><div class="v-form-secondary">${v.ovt2}</div>`
+      : `<div class="v-form">${v.ovt}</div>`;
+    tr.innerHTML = `
+      <td><div class="v-nl">${v.nl}</div><div class="v-en">${v.en}</div></td>
+      <td>${ovtHtml}</td>
+      <td><div class="v-form-vd">${v.vd}</div></td>
+      <td><div class="v-aux">${auxHtml}</div></td>
+      <td><div class="v-note">${v.note?v.note.replace(/\n/g,"<br>"):""}</div></td>`;
+    body.appendChild(tr);
+  });
+  document.getElementById("noResults").style.display = data.length===0 ? "block" : "none";
+}
+
+let activeCat = "all";
+function applyFilters(){
+  const q = document.getElementById("verbSearch").value.toLowerCase();
+  const filtered = cleanVerbs.filter(v=>{
+    const catOk = activeCat==="all" || v.cat===activeCat;
+    const textOk = !q || v.nl.toLowerCase().includes(q) || v.en.toLowerCase().includes(q) || v.ovt.toLowerCase().includes(q) || v.vd.toLowerCase().includes(q);
+    return catOk && textOk;
+  });
+  renderTable(filtered);
+}
+
+document.querySelectorAll("[data-vfilter]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("[data-vfilter]").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    activeCat = btn.dataset.vfilter;
+    applyFilters();
+  });
+});
+document.getElementById("verbSearch").addEventListener("input", applyFilters);
+renderTable(cleanVerbs);
+</script>
+</body>
+</html>

@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse & Learn — Annie Leert Nederlands</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@500;600&display=swap');
+:root{--scheldt-blue:#294E72;--brothers-green:#016935;--croissant:#FFA500;--burgundy:#733B40;--castle-grey:#6B6B6B;--charcoal:#1c1d24;--north-country:#A6C5EA;--glencoe:#C0BF87;--bitten-croissant:#F3D6B0;--oat-milk:#F6F7F6;--fog:#CBCAD0;--bg:#F6F7F6;--surface:#fff;--border:#CBCAD0;--ink:#1c1d24;--muted:#6B6B6B;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:"Source Sans 3",sans-serif;font-weight:300;min-height:100vh;font-size:16px;line-height:1.5;}
+/* NAV */
+.topnav{background:var(--charcoal);display:flex;align-items:center;gap:0;padding:0 2rem;height:48px;position:sticky;top:0;z-index:20;}
+.topnav-home{font-family:"Playfair Display",serif;font-size:.95rem;font-weight:700;color:var(--oat-milk);text-decoration:none;margin-right:1.5rem;white-space:nowrap;}
+.topnav-home em{color:var(--north-country);font-style:italic;}
+.topnav-links{display:flex;gap:0;flex:1;}
+.topnav-link{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;color:var(--fog);text-decoration:none;padding:0 1rem;height:48px;display:flex;align-items:center;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap;}
+.topnav-link:hover{color:var(--north-country);}
+.topnav-link.active{color:var(--oat-milk);border-bottom-color:var(--north-country);}
+/* HEADER */
+header{background:var(--charcoal);color:var(--oat-milk);padding:2.2rem 2rem 1.8rem;position:relative;overflow:hidden;}
+header::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 20% 50%,rgba(41,78,114,0.25) 0%,transparent 70%);pointer-events:none;}
+header h1{font-family:"Playfair Display",serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:700;position:relative;color:var(--oat-milk);}
+header h1 em{color:var(--north-country);font-style:italic;}
+.header-sub{margin-top:.4rem;font-size:.78rem;letter-spacing:.13em;text-transform:uppercase;color:var(--fog);position:relative;}
+/* CONTROLS */
+.controls-wrap{background:var(--surface);border-bottom:1.5px solid var(--border);position:sticky;top:48px;z-index:10;box-shadow:0 2px 8px rgba(28,29,36,0.06);}
+.controls{max-width:1140px;margin:0 auto;padding:.75rem 2rem;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;}
+.filter-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);font-weight:600;margin-right:.3rem;flex-shrink:0;}
+.sep{width:1px;height:20px;background:var(--border);margin:0 .4rem;flex-shrink:0;}
+.filter-btn{background:transparent;border:1.5px solid var(--border);color:var(--muted);padding:.22rem .75rem;border-radius:2rem;font-family:"Source Sans 3",sans-serif;font-size:.76rem;cursor:pointer;transition:all .15s;font-weight:400;white-space:nowrap;}
+.filter-btn:hover{border-color:var(--scheldt-blue);color:var(--scheldt-blue);}
+.filter-btn.active{background:var(--scheldt-blue);color:var(--oat-milk);border-color:var(--scheldt-blue);font-weight:600;}
+/* level filter colours */
+.filter-btn[data-filter="A0"].active{background:#4a4a6a;border-color:#4a4a6a;}
+.filter-btn[data-filter="A1"].active{background:var(--scheldt-blue);border-color:var(--scheldt-blue);}
+.filter-btn[data-filter="A2"].active{background:#1a5c3a;border-color:#1a5c3a;}
+.filter-btn[data-filter="B1"].active{background:var(--burgundy);border-color:var(--burgundy);}
+.filter-btn[data-filter="B2"].active{background:#5c3d00;border-color:#5c3d00;}
+.filter-btn[data-filter="C1"].active{background:#3a1a5c;border-color:#3a1a5c;}
+.count{text-align:center;color:var(--muted);font-size:.76rem;padding:.8rem 2rem .3rem;max-width:1140px;margin:0 auto;letter-spacing:.06em;}
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem;padding:.8rem 2rem 3.5rem;max-width:1140px;margin:0 auto;}
+/* CARD */
+.card{background:var(--surface);border:1.5px solid var(--border);border-left-width:4px;border-radius:6px;padding:1.2rem 1.3rem 1.1rem;display:flex;flex-direction:column;gap:.5rem;animation:fadeUp .28s ease both;transition:box-shadow .2s,transform .2s;}
+.card:hover{box-shadow:0 4px 18px rgba(41,78,114,0.10);transform:translateY(-2px);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.card[data-primary="word-order"]{border-left-color:var(--scheldt-blue);}
+.card[data-primary="negation"]{border-left-color:var(--burgundy);}
+.card[data-primary="tense"]{border-left-color:var(--brothers-green);}
+.card[data-primary="modal"]{border-left-color:var(--croissant);}
+.card[data-primary="question"]{border-left-color:var(--castle-grey);}
+.card[data-primary="subordinate"]{border-left-color:#5c1f26;}
+.card[data-primary="preposition"]{border-left-color:#014d27;}
+.card[data-primary="adjective"]{border-left-color:#1a3a5c;}
+.card[data-primary="pronoun"]{border-left-color:#6b3fa0;}
+.card[data-primary="verb"]{border-left-color:#8b4513;}
+/* CARD TOP ROW */
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;}
+.card-tags{display:flex;flex-wrap:wrap;gap:.25rem;flex:1;}
+.tag{font-size:.63rem;text-transform:uppercase;letter-spacing:.09em;font-weight:600;padding:.1rem .42rem;border-radius:3px;background:var(--bg);color:var(--muted);border:1px solid var(--border);}
+.tag.word-order{background:rgba(166,197,234,0.30);color:var(--scheldt-blue);border-color:rgba(41,78,114,0.25);}
+.tag.negation{background:rgba(216,191,216,0.35);color:var(--burgundy);border-color:rgba(115,59,64,0.25);}
+.tag.tense{background:rgba(192,191,135,0.35);color:var(--brothers-green);border-color:rgba(1,105,53,0.25);}
+.tag.modal{background:rgba(243,214,176,0.50);color:#7a4a10;border-color:rgba(255,165,0,0.35);}
+.tag.question{background:rgba(203,202,208,0.45);color:#2e2e3a;border-color:rgba(107,107,107,0.30);}
+.tag.subordinate{background:rgba(92,31,38,0.10);color:#5c1f26;border-color:rgba(115,59,64,0.22);}
+.tag.preposition{background:rgba(1,105,53,0.10);color:#014d27;border-color:rgba(1,105,53,0.22);}
+.tag.adjective{background:rgba(41,78,114,0.10);color:#1a3a5c;border-color:rgba(41,78,114,0.22);}
+.tag.pronoun{background:rgba(107,63,160,0.12);color:#6b3fa0;border-color:rgba(107,63,160,0.25);}
+.tag.verb{background:rgba(139,69,19,0.10);color:#7a3a0a;border-color:rgba(139,69,19,0.25);}
+/* LEVEL BADGE */
+.level-badge{font-size:.6rem;font-weight:700;letter-spacing:.08em;padding:.12rem .38rem;border-radius:3px;white-space:nowrap;flex-shrink:0;}
+.level-A0{background:#e8e8f0;color:#4a4a6a;border:1px solid #c8c8d8;}
+.level-A1{background:rgba(166,197,234,0.35);color:var(--scheldt-blue);border:1px solid rgba(41,78,114,0.25);}
+.level-A2{background:rgba(192,191,135,0.40);color:#1a5c3a;border:1px solid rgba(26,92,58,0.25);}
+.level-B1{background:rgba(216,191,216,0.40);color:var(--burgundy);border:1px solid rgba(115,59,64,0.25);}
+.level-B2{background:rgba(243,214,176,0.50);color:#5c3d00;border:1px solid rgba(92,61,0,0.25);}
+.level-C1{background:rgba(107,63,160,0.12);color:#3a1a5c;border:1px solid rgba(58,26,92,0.25);}
+.rule-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;font-weight:600;color:var(--muted);}
+.dutch{font-family:"Playfair Display",serif;font-size:1.1rem;font-weight:700;color:var(--charcoal);line-height:1.45;letter-spacing:-.01em;}
+.english{font-size:.86rem;color:var(--castle-grey);font-style:italic;font-weight:400;}
+.explanation{font-size:.84rem;color:#3a3a44;line-height:1.65;font-weight:400;border-top:1px solid var(--border);padding-top:.55rem;margin-top:.1rem;}
+.hl{background:var(--bitten-croissant);border-radius:2px;padding:0 3px;font-weight:600;color:var(--charcoal);font-style:normal;}
+/* PATTERN LINK */
+.pattern-link{font-size:.7rem;color:var(--scheldt-blue);text-decoration:none;display:inline-flex;align-items:center;gap:.25rem;font-weight:600;letter-spacing:.04em;margin-top:.1rem;opacity:.75;transition:opacity .15s;}
+.pattern-link:hover{opacity:1;text-decoration:underline;}
+.pattern-link::before{content:"⇢";}
+footer{text-align:center;padding:1.6rem 2rem;color:var(--muted);font-size:.76rem;border-top:1px solid var(--border);letter-spacing:.06em;font-style:italic;}
+@media(max-width:700px){.grid{padding:.6rem 1rem 2.5rem;gap:.8rem;}.controls{padding:.6rem 1rem;}.topnav-links .topnav-link:not(.active){display:none;}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="topnav-home" href="index.html">Annie leert <em>Nederlands</em></a>
+  <div class="topnav-links">
+    <a class="topnav-link active" href="learn.html">📖 Learn</a>
+    <a class="topnav-link" href="revise.html">🃏 Revise</a>
+    <a class="topnav-link" href="structures.html">💬 Conversation</a>
+    <a class="topnav-link" href="verbs.html">📋 Verbs</a>
+  </div>
+</nav>
+<header>
+  <h1>Browse &amp; <em>Learn</em></h1>
+  <p class="header-sub">Grammar cards · filter by topic or level · click a pattern to see the structure</p>
+</header>
+<div class="controls-wrap">
+  <div class="controls" id="controls">
+    <span class="filter-label">Topic:</span>
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="word-order">Word Order</button>
+    <button class="filter-btn" data-filter="negation">Negation</button>
+    <button class="filter-btn" data-filter="tense">Tenses</button>
+    <button class="filter-btn" data-filter="modal">Modals</button>
+    <button class="filter-btn" data-filter="question">Questions</button>
+    <button class="filter-btn" data-filter="subordinate">Clauses</button>
+    <button class="filter-btn" data-filter="preposition">Prepositions</button>
+    <button class="filter-btn" data-filter="adjective">Adjectives</button>
+    <button class="filter-btn" data-filter="verb">Verbs</button>
+    <button class="filter-btn" data-filter="pronoun">Pronouns</button>
+    <div class="sep"></div>
+    <span class="filter-label">Level:</span>
+    <button class="filter-btn" data-filter="A0">A0</button>
+    <button class="filter-btn" data-filter="A1">A1</button>
+    <button class="filter-btn" data-filter="A2">A2</button>
+    <button class="filter-btn" data-filter="B1">B1</button>
+    <button class="filter-btn" data-filter="B2">B2</button>
+    <button class="filter-btn" data-filter="C1">C1</button>
+  </div>
+</div>
+<p class="count" id="count"></p>
+<div class="grid" id="grid"></div>
+<footer>Veel succes, lieve Annie 🌷 — Antwerpen wacht op je</footer>
+<script>
+const sentences = [
+{
+  id: 0,
+  tags: ["word-order"],
+  level: "A0",
+  patternId: "1",
+  rule: "Basic SVO \u2014 Subject Verb Object",
+  dutch: "Annie leert Nederlands.",
+  english: "Annie learns Dutch.",
+  explanation: "Dutch follows Subject\u2013Verb\u2013Object order, just like English. The verb <span class='hl'>leert</span> (learns) sits in position 2.",
+},
+{
+  id: 1,
+  tags: ["word-order"],
+  level: "A1",
+  patternId: "14",
+  rule: "V2 Rule \u2014 Verb stays in position 2",
+  dutch: "Omdat ze oefent, leert Annie Nederlands.",
+  english: "Because she practises, Annie learns Dutch.",
+  explanation: "When a subordinate clause opens the sentence, the main verb <span class='hl'>leert</span> must still land in position 2 \u2014 so subject Annie is pushed after it. This is the Dutch V2 rule.",
+},
+{
+  id: 2,
+  tags: ["word-order"],
+  level: "A1",
+  patternId: "14",
+  rule: "Time adverb \u2014 V2 inversion",
+  dutch: "Elke dag oefent Annie haar Nederlands.",
+  english: "Every day Annie practises her Dutch.",
+  explanation: "<span class='hl'>Elke dag</span> (every day) is placed first for emphasis. The verb <span class='hl'>oefent</span> must stay in position 2, so the subject Annie shifts to position 3.",
+},
+{
+  id: 3,
+  tags: ["word-order"],
+  level: "A1",
+  patternId: "14",
+  rule: "Place adverb \u2014 V2 inversion",
+  dutch: "In Antwerpen spreekt Annie Nederlands met zijn familie.",
+  english: "In Antwerp, Annie speaks Dutch with his family.",
+  explanation: "The place phrase <span class='hl'>In Antwerpen</span> takes position 1. The verb <span class='hl'>spreekt</span> locks into position 2, pushing the subject to position 3.",
+},
+{
+  id: 4,
+  tags: ["word-order"],
+  level: "A2",
+  patternId: "14",
+  rule: "Time-Manner-Place order",
+  dutch: "Annie bezoekt hem elke maand blij in Antwerpen.",
+  english: "Annie visits him happily in Antwerp every month.",
+  explanation: "Dutch prefers the order Time \u2192 Manner \u2192 Place for adverbials: <span class='hl'>elke maand</span> (time), <span class='hl'>blij</span> (manner), <span class='hl'>in Antwerpen</span> (place).",
+},
+{
+  id: 5,
+  tags: ["word-order", "subordinate"],
+  level: "A1",
+  patternId: "31",
+  rule: "Subordinate clause \u2014 verb to the end (dat)",
+  dutch: "Annie weet dat haar vriend Antwerps is.",
+  english: "Annie knows that her boyfriend is from Antwerp.",
+  explanation: "In a subordinate clause introduced by <span class='hl'>dat</span>, the verb is kicked to the very end. Main clause order is SVO; subordinate clause order is SOV.",
+},
+{
+  id: 6,
+  tags: ["word-order", "subordinate"],
+  level: "A1",
+  patternId: "30",
+  rule: "omdat \u2014 verb-final",
+  dutch: "Ze leert Nederlands omdat ze van hem houdt.",
+  english: "She learns Dutch because she loves him.",
+  explanation: "<span class='hl'>Houden van</span> is a phrasal verb \u2014 the <span class='hl'>van</span> travels with its object, so the clause ends <span class='hl'>\u2026van hem houdt</span> rather than the more intuitive <span class='hl'>\u2026hem houdt van</span>.",
+},
+{
+  id: 7,
+  tags: ["word-order", "subordinate"],
+  level: "A2",
+  patternId: "40",
+  rule: "Relative clause \u2014 die/dat",
+  dutch: "De man die ze kent is Antwerpenaar.",
+  english: "The man she knows is from Antwerp.",
+  explanation: "Relative clauses introduced by <span class='hl'>die</span> (de-words/plural) or <span class='hl'>dat</span> (het-words) send the verb to the end of the clause.",
+},
+{
+  id: 8,
+  tags: ["word-order"],
+  level: "A2",
+  patternId: "1",
+  rule: "Direct vs indirect object order",
+  dutch: "Hij stuurt haar elke dag een berichtje.",
+  english: "He sends her a message every day.",
+  explanation: "With two noun objects, the indirect object (her = <span class='hl'>haar</span>) comes before the direct object (<span class='hl'>een berichtje</span>).",
+},
+{
+  id: 9,
+  tags: ["negation", "word-order"],
+  level: "A1",
+  patternId: "20",
+  rule: "niet \u2014 negating a verb",
+  dutch: "Annie leert niet Frans.",
+  english: "Annie does not learn French.",
+  explanation: "<span class='hl'>Niet</span> negates the verb/predicate and generally comes as late as possible in the clause.",
+},
+{
+  id: 10,
+  tags: ["negation"],
+  level: "A1",
+  patternId: "19",
+  rule: "geen \u2014 negating an indefinite noun",
+  dutch: "Annie heeft geen Belgische vriend gehad v\u00f3\u00f3r hem.",
+  english: "Annie hadn't had a Belgian boyfriend before him.",
+  explanation: "<span class='hl'>Geen</span> negates indefinite nouns (a/an, some). You cannot use <span class='hl'>niet een</span> \u2014 use <span class='hl'>geen</span> instead.",
+},
+{
+  id: 11,
+  tags: ["negation"],
+  level: "A1",
+  patternId: "20",
+  rule: "niet \u2014 negating an adjective",
+  dutch: "Nederlands is niet moeilijk voor haar.",
+  english: "Dutch is not difficult for her.",
+  explanation: "<span class='hl'>Niet</span> precedes the predicate adjective <span class='hl'>moeilijk</span> it negates.",
+},
+{
+  id: 12,
+  tags: ["negation", "subordinate"],
+  level: "A2",
+  patternId: "20",
+  rule: "niet in a subordinate clause",
+  dutch: "Hij weet niet dat ze zoveel oefent.",
+  english: "He doesn't know that she practises so much.",
+  explanation: "<span class='hl'>Niet</span> negates the main verb <span class='hl'>weet</span>. In the subordinate clause, the verb <span class='hl'>oefent</span> still goes to the end.",
+},
+{
+  id: 13,
+  tags: ["negation"],
+  level: "A1",
+  patternId: "20",
+  rule: "nooit \u2014 never",
+  dutch: "Annie vergeet nooit waarom ze Nederlands leert.",
+  english: "Annie never forgets why she's learning Dutch.",
+  explanation: "<span class='hl'>Nooit</span> (never) is a frequency adverb placed after the verb. It is a stronger negation than <span class='hl'>niet</span>.",
+},
+{
+  id: 14,
+  tags: ["negation"],
+  level: "A2",
+  patternId: "20",
+  rule: "niemand \u2014 nobody",
+  dutch: "Niemand begrijpt haar beter dan haar vriend.",
+  english: "Nobody understands her better than her boyfriend.",
+  explanation: "<span class='hl'>Niemand</span> acts as the subject. V2 still applies \u2014 the verb <span class='hl'>begrijpt</span> stays in position 2.",
+},
+{
+  id: 15,
+  tags: ["negation"],
+  level: "B1",
+  patternId: "20",
+  rule: "nergens \u2014 nowhere",
+  dutch: "Ze voelt zich nergens zo gelukkig als in zijn armen.",
+  english: "She feels happy nowhere like she does in his arms.",
+  explanation: "<span class='hl'>Nergens</span> (nowhere) negates a place. The reflexive <span class='hl'>zich</span> pairs with <span class='hl'>voelen</span> \u2014 Dutch uses reflexives with many feeling verbs.",
+},
+{
+  id: 16,
+  tags: ["negation"],
+  level: "A2",
+  patternId: "20",
+  rule: "niet... maar \u2014 not... but (contrast)",
+  dutch: "Ze leert niet Frans, maar Nederlands.",
+  english: "She's not learning French, but Dutch.",
+  explanation: "<span class='hl'>Niet...maar</span> is the standard pattern for 'not X but Y'. <span class='hl'>Niet</span> negates specifically what follows; <span class='hl'>maar</span> introduces the correction.",
+},
+{
+  id: 17,
+  tags: ["tense"],
+  level: "A0",
+  patternId: "1",
+  rule: "Simple present (onvoltooid tegenwoordige tijd)",
+  dutch: "Annie leert Nederlands.",
+  english: "Annie learns / is learning Dutch.",
+  explanation: "Dutch verb endings don't distinguish between 'learns' and 'is learning' \u2014 <span class='hl'>leert</span> covers both. For emphasis that something is happening right now, Dutch uses the <span class='hl'>aan het</span> construction.",
+},
+{
+  id: 18,
+  tags: ["tense"],
+  level: "A1",
+  patternId: "2",
+  rule: "aan het \u2014 present progressive",
+  dutch: "Ze is Nederlands aan het leren voor hem.",
+  english: "She is learning Dutch for him.",
+  explanation: "<span class='hl'>Zijn</span> + <span class='hl'>aan het</span> + infinitive stresses that something is actively happening right now. The infinitive goes to the end of the clause.",
+},
+{
+  id: 19,
+  tags: ["tense"],
+  level: "A2",
+  patternId: "2",
+  rule: "aan het \u2014 progressive with prepositional verb",
+  dutch: "Ze is aan het denken aan hun volgende ontmoeting.",
+  english: "She is thinking about their next meeting.",
+  explanation: "When the verb takes a fixed preposition (<span class='hl'>denken aan</span>), the prepositional phrase follows the infinitive. The two <span class='hl'>aan</span>s look surprising \u2014 one belongs to <span class='hl'>aan het</span>, the other to the verb.",
+},
+{
+  id: 20,
+  tags: ["tense", "verb"],
+  level: "B1",
+  patternId: "2",
+  rule: "zitten/staan/liggen te \u2014 positional progressive",
+  dutch: "Ze zit te dromen over hun weekend in Antwerpen.",
+  english: "She sits daydreaming about their weekend in Antwerp.",
+  explanation: "<span class='hl'>Zitten/staan/liggen</span> + <span class='hl'>te</span> + infinitive is a colloquial alternative to <span class='hl'>aan het</span>, implying a physical posture. Very natural in spoken Dutch.",
+},
+{
+  id: 21,
+  tags: ["tense"],
+  level: "A1",
+  patternId: "11",
+  rule: "Present perfect with hebben",
+  dutch: "Annie heeft veel Nederlandse woorden geleerd.",
+  english: "Annie has learned many Dutch words.",
+  explanation: "Most verbs form the perfect with <span class='hl'>hebben</span> + past participle. The participle <span class='hl'>geleerd</span> goes to the end of the clause.",
+},
+{
+  id: 22,
+  tags: ["tense"],
+  level: "A1",
+  patternId: "12",
+  rule: "Present perfect with zijn",
+  dutch: "Ze is naar Antwerpen gereisd om zijn familie te ontmoeten.",
+  english: "She has travelled to Antwerp to meet his family.",
+  explanation: "Verbs of motion or change of state use <span class='hl'>zijn</span> as auxiliary. <span class='hl'>Gereisd</span> (travelled) takes <span class='hl'>is</span>, not <span class='hl'>heeft</span>.",
+},
+{
+  id: 23,
+  tags: ["tense"],
+  level: "A2",
+  patternId: "11",
+  rule: "Simple past (onvoltooid verleden tijd)",
+  dutch: "Annie leerde Nederlands toen ze hem ontmoette.",
+  english: "Annie learned Dutch when she met him.",
+  explanation: "The simple past adds <span class='hl'>-te/-de</span> to the stem for weak verbs. <span class='hl'>Leerde</span> and <span class='hl'>ontmoette</span> are both weak past tense forms.",
+},
+{
+  id: 24,
+  tags: ["tense"],
+  level: "B1",
+  patternId: "11",
+  rule: "Past perfect (voltooid verleden tijd)",
+  dutch: "Ze had al een beetje geoefend voordat ze hem kuste.",
+  english: "She had already practised a little before she kissed him.",
+  explanation: "The past perfect uses <span class='hl'>had/hadden</span> + past participle. <span class='hl'>Geoefend</span> (practised) goes to the end.",
+},
+{
+  id: 25,
+  tags: ["tense"],
+  level: "A2",
+  patternId: "20",
+  rule: "Future with zullen",
+  dutch: "Annie zal volgend jaar vloeiend Nederlands spreken.",
+  english: "Annie will speak fluent Dutch next year.",
+  explanation: "<span class='hl'>Zullen</span> + infinitive forms the future. The infinitive <span class='hl'>spreken</span> is pushed to the end of the clause.",
+},
+{
+  id: 26,
+  tags: ["tense"],
+  level: "A1",
+  patternId: "19",
+  rule: "Near future with gaan",
+  dutch: "Ze gaat vanavond met hem Nederlandstalige films kijken.",
+  english: "She's going to watch Dutch-language films with him tonight.",
+  explanation: "<span class='hl'>Gaan</span> + infinitive expresses intention or near future, like English 'going to'. The infinitive goes to the end.",
+},
+{
+  id: 27,
+  tags: ["modal"],
+  level: "A1",
+  patternId: "9",
+  rule: "kunnen \u2014 can / to be able to",
+  dutch: "Annie kan al een beetje Nederlands spreken.",
+  english: "Annie can already speak a little Dutch.",
+  explanation: "<span class='hl'>Kunnen</span> expresses ability. Like all modals, it takes position 2 and sends the infinitive <span class='hl'>spreken</span> to the end.",
+},
+{
+  id: 28,
+  tags: ["modal"],
+  level: "A1",
+  patternId: "9",
+  rule: "willen \u2014 to want to",
+  dutch: "Ze wil zijn dialect begrijpen.",
+  english: "She wants to understand his dialect.",
+  explanation: "<span class='hl'>Willen</span> expresses desire. The infinitive <span class='hl'>begrijpen</span> is pushed to the end of the clause.",
+},
+{
+  id: 29,
+  tags: ["modal"],
+  level: "A1",
+  patternId: "9",
+  rule: "moeten \u2014 must / to have to",
+  dutch: "Annie moet elke dag oefenen.",
+  english: "Annie must practise every day.",
+  explanation: "<span class='hl'>Moeten</span> expresses obligation or necessity. The dependent infinitive <span class='hl'>oefenen</span> moves to the end.",
+},
+{
+  id: 30,
+  tags: ["modal"],
+  level: "A1",
+  patternId: "9",
+  rule: "mogen \u2014 may / to be allowed to",
+  dutch: "Ze mag zijn familie bellen wanneer ze wil.",
+  english: "She may call his family whenever she wants.",
+  explanation: "<span class='hl'>Mogen</span> expresses permission. It also carries an element of polite possibility.",
+},
+{
+  id: 31,
+  tags: ["modal"],
+  level: "A2",
+  patternId: "20",
+  rule: "zouden \u2014 would / conditional",
+  dutch: "Ze zou graag in Antwerpen wonen.",
+  english: "She would love to live in Antwerp.",
+  explanation: "<span class='hl'>Zouden</span> forms the conditional. <span class='hl'>Graag</span> (gladly) softens and polishes the wish.",
+},
+{
+  id: 32,
+  tags: ["modal"],
+  level: "B1",
+  patternId: "9",
+  rule: "hoeven \u2014 need not (negated obligation)",
+  dutch: "Ze hoeft niet perfect te zijn \u2014 hij houdt toch van haar.",
+  english: "She doesn't need to be perfect \u2014 he loves her anyway.",
+  explanation: "<span class='hl'>Hoeven</span> is used only in negated or question contexts. It requires <span class='hl'>te</span> before the infinitive, unlike other modals.",
+},
+{
+  id: 33,
+  tags: ["question"],
+  level: "A0",
+  patternId: "8",
+  rule: "Yes/no question \u2014 inversion",
+  dutch: "Leert Annie Nederlands?",
+  english: "Is Annie learning Dutch?",
+  explanation: "To form a yes/no question, invert subject and verb. The verb moves to position 1, the subject follows immediately after.",
+},
+{
+  id: 34,
+  tags: ["question"],
+  level: "A0",
+  patternId: "9",
+  rule: "Wat \u2014 what",
+  dutch: "Wat leert Annie?",
+  english: "What is Annie learning?",
+  explanation: "<span class='hl'>Wat</span> (what) opens the sentence and the verb follows directly in position 2, then the subject.",
+},
+{
+  id: 35,
+  tags: ["question"],
+  level: "A1",
+  patternId: "9",
+  rule: "Waarom \u2014 why",
+  dutch: "Waarom leert Annie Nederlands?",
+  english: "Why is Annie learning Dutch?",
+  explanation: "<span class='hl'>Waarom</span> (why) triggers V2 inversion just like any fronted element: question word \u2192 verb \u2192 subject.",
+},
+{
+  id: 36,
+  tags: ["question"],
+  level: "A0",
+  patternId: "9",
+  rule: "Waar \u2014 where",
+  dutch: "Waar woont haar vriend?",
+  english: "Where does her boyfriend live?",
+  explanation: "<span class='hl'>Waar</span> (where) is a location question word. It occupies position 1, the verb follows in position 2.",
+},
+{
+  id: 37,
+  tags: ["question"],
+  level: "A1",
+  patternId: "9",
+  rule: "Hoe \u2014 how",
+  dutch: "Hoe zegt men dat in het Antwerps?",
+  english: "How do you say that in Antwerp dialect?",
+  explanation: "<span class='hl'>Hoe</span> (how) starts the question. <span class='hl'>Men</span> is the impersonal pronoun equivalent to 'one' or informal 'you'.",
+},
+{
+  id: 38,
+  tags: ["question", "subordinate"],
+  level: "A2",
+  patternId: "28",
+  rule: "Indirect question \u2014 of (whether)",
+  dutch: "Annie vraagt zich af of hij ook van haar houdt.",
+  english: "Annie wonders whether he loves her too.",
+  explanation: "Indirect questions introduced by <span class='hl'>of</span> (whether/if) behave like subordinate clauses \u2014 verb goes to the end.",
+},
+{
+  id: 39,
+  tags: ["subordinate"],
+  level: "A1",
+  patternId: "32",
+  rule: "als \u2014 if / when (conditional)",
+  dutch: "Als ze hem mist, stuurt ze een berichtje.",
+  english: "When she misses him, she sends a message.",
+  explanation: "<span class='hl'>Als</span> can mean both 'if' and 'when'. It introduces a verb-final subordinate clause; the main clause verb then sits in position 2.",
+},
+{
+  id: 40,
+  tags: ["subordinate"],
+  level: "A2",
+  patternId: "33",
+  rule: "toen \u2014 when (past, single event)",
+  dutch: "Toen ze hem voor het eerst zag, wist ze het al.",
+  english: "When she saw him for the first time, she already knew.",
+  explanation: "<span class='hl'>Toen</span> refers to a single completed past event, unlike <span class='hl'>wanneer</span> (repeated/open).",
+},
+{
+  id: 41,
+  tags: ["subordinate"],
+  level: "A2",
+  patternId: "37",
+  rule: "om te \u2014 in order to",
+  dutch: "Ze leert Nederlands om met zijn familie te praten.",
+  english: "She learns Dutch in order to talk with his family.",
+  explanation: "<span class='hl'>Om...te</span> expresses purpose. The infinitive follows <span class='hl'>te</span> at the end of the clause.",
+},
+{
+  id: 42,
+  tags: ["subordinate"],
+  level: "B1",
+  patternId: "35",
+  rule: "zodat \u2014 so that",
+  dutch: "Ze oefent hard zodat ze hem kan verrassen.",
+  english: "She practises hard so that she can surprise him.",
+  explanation: "<span class='hl'>Zodat</span> introduces a result clause. The modal <span class='hl'>kan</span> and infinitive <span class='hl'>verrassen</span> cluster at the end.",
+},
+{
+  id: 43,
+  tags: ["subordinate"],
+  level: "B1",
+  patternId: "36",
+  rule: "hoewel \u2014 although",
+  dutch: "Hoewel Nederlands moeilijk is, geeft Annie niet op.",
+  english: "Although Dutch is difficult, Annie doesn't give up.",
+  explanation: "<span class='hl'>Hoewel</span> (although) introduces a concessive clause with verb-final order, then the main clause follows with V2 inversion.",
+},
+{
+  id: 44,
+  tags: ["preposition"],
+  level: "A0",
+  patternId: "1",
+  rule: "in \u2014 location inside",
+  dutch: "Annie woont in het Verenigd Koninkrijk.",
+  english: "Annie lives in the United Kingdom.",
+  explanation: "<span class='hl'>In</span> expresses location inside a place. With countries using the definite article, use <span class='hl'>het</span>.",
+},
+{
+  id: 45,
+  tags: ["preposition"],
+  level: "A0",
+  patternId: "1",
+  rule: "naar \u2014 movement towards",
+  dutch: "Ze reist naar Antwerpen om hem te zien.",
+  english: "She travels to Antwerp to see him.",
+  explanation: "<span class='hl'>Naar</span> expresses direction of movement. Use <span class='hl'>naar</span> with place names.",
+},
+{
+  id: 46,
+  tags: ["preposition"],
+  level: "A1",
+  patternId: "1",
+  rule: "van \u2014 of / from",
+  dutch: "Ze houdt van hem en van zijn stad.",
+  english: "She loves him and his city.",
+  explanation: "<span class='hl'>Van</span> has many uses: possession, origin, and \u2014 crucially \u2014 with <span class='hl'>houden van</span> (to love/like).",
+},
+{
+  id: 47,
+  tags: ["preposition"],
+  level: "A1",
+  patternId: "1",
+  rule: "op \u2014 on / at (surface or point)",
+  dutch: "Ze wacht op hem op het perron.",
+  english: "She waits for him on the platform.",
+  explanation: "<span class='hl'>Op</span> expresses location on a surface. Note that <span class='hl'>wachten op</span> (to wait for) is a fixed phrase.",
+},
+{
+  id: 48,
+  tags: ["preposition"],
+  level: "A0",
+  patternId: "1",
+  rule: "met \u2014 with",
+  dutch: "Ze praat elke avond met hem.",
+  english: "She talks with him every evening.",
+  explanation: "<span class='hl'>Met</span> (with) expresses accompaniment. It is always the same form \u2014 no gendered variation.",
+},
+{
+  id: 49,
+  tags: ["preposition"],
+  level: "A1",
+  patternId: "1",
+  rule: "voor \u2014 for / in front of",
+  dutch: "Hij doet alles voor haar.",
+  english: "He does everything for her.",
+  explanation: "<span class='hl'>Voor</span> can mean 'for' (beneficiary), 'before' (time), or 'in front of' (location).",
+},
+{
+  id: 50,
+  tags: ["verb", "word-order"],
+  level: "A2",
+  patternId: "11",
+  rule: "Separable verb \u2014 prefix splits off",
+  dutch: "Annie belt haar vriend op.",
+  english: "Annie calls her boyfriend.",
+  explanation: "<span class='hl'>Opbellen</span> (to call) is a separable verb. In a main clause the prefix <span class='hl'>op</span> detaches and moves to the very end. The conjugated part <span class='hl'>belt</span> stays in position 2.",
+},
+{
+  id: 51,
+  tags: ["verb", "word-order", "subordinate"],
+  level: "A2",
+  patternId: "11",
+  rule: "Separable verb \u2014 stays together in subordinate clause",
+  dutch: "Ze is blij dat ze hem opbelt.",
+  english: "She is glad that she calls him.",
+  explanation: "In a subordinate clause (here introduced by <span class='hl'>dat</span>), the separable verb stays together as one unit at the end: <span class='hl'>opbelt</span>, not split.",
+},
+{
+  id: 52,
+  tags: ["verb", "word-order"],
+  level: "B1",
+  patternId: "13",
+  rule: "Separable verb \u2014 te slots between prefix and stem",
+  dutch: "Ze vergeet nooit hem op te bellen.",
+  english: "She never forgets to call him.",
+  explanation: "When <span class='hl'>te</span> + infinitive is used with a separable verb, <span class='hl'>te</span> slots between the prefix and the stem: <span class='hl'>op te bellen</span>.",
+},
+{
+  id: 53,
+  tags: ["verb", "tense"],
+  level: "A2",
+  patternId: "14",
+  rule: "Separable verb \u2014 past participle",
+  dutch: "Ze heeft hem gisteren opgebeld.",
+  english: "She called him yesterday.",
+  explanation: "The past participle of a separable verb wraps <span class='hl'>ge-</span> between prefix and stem: <span class='hl'>op</span> + <span class='hl'>ge</span> + <span class='hl'>beld</span> = <span class='hl'>opgebeld</span>.",
+},
+{
+  id: 54,
+  tags: ["verb"],
+  level: "A2",
+  patternId: "1",
+  rule: "Reflexive verb \u2014 zich (3rd person)",
+  dutch: "Annie voelt zich gelukkig als ze met hem praat.",
+  english: "Annie feels happy when she talks to him.",
+  explanation: "<span class='hl'>Zich voelen</span> (to feel) is reflexive. <span class='hl'>Zich</span> is used for third-person singular and plural.",
+},
+{
+  id: 55,
+  tags: ["verb"],
+  level: "A2",
+  patternId: "1",
+  rule: "Reflexive verb \u2014 zich herinneren",
+  dutch: "Ze herinnert zich elke seconde van hun eerste ontmoeting.",
+  english: "She remembers every second of their first meeting.",
+  explanation: "<span class='hl'>Zich herinneren</span> (to remember) always takes a reflexive pronoun.",
+},
+{
+  id: 56,
+  tags: ["verb", "word-order"],
+  level: "A1",
+  patternId: "1",
+  rule: "er \u2014 existential (there is / there are)",
+  dutch: "Er is een man die haar elke dag een berichtje stuurt.",
+  english: "There is a man who sends her a message every day.",
+  explanation: "<span class='hl'>Er</span> acts as a placeholder subject when no specific subject is given. It pairs with <span class='hl'>zijn</span> to mean 'there is/are'.",
+},
+{
+  id: 57,
+  tags: ["verb", "preposition"],
+  level: "B1",
+  patternId: "1",
+  rule: "er \u2014 pronominal adverb (ernaar, ervoor\u2026)",
+  dutch: "Ze kijkt er elke avond naar uit.",
+  english: "She looks forward to it every evening.",
+  explanation: "When a preposition's object is a thing rather than a person, Dutch merges <span class='hl'>er</span> with the preposition: <span class='hl'>naar het</span> \u2192 <span class='hl'>ernaar</span>.",
+},
+{
+  id: 58,
+  tags: ["verb"],
+  level: "A1",
+  patternId: "1",
+  rule: "Imperative \u2014 bare stem",
+  dutch: "Oefen elke dag!",
+  english: "Practise every day!",
+  explanation: "The Dutch imperative is the verb stem alone: infinitive <span class='hl'>oefenen</span> \u2192 stem <span class='hl'>oefen</span>.",
+},
+{
+  id: 59,
+  tags: ["verb"],
+  level: "A2",
+  patternId: "1",
+  rule: "Imperative \u2014 softened with je",
+  dutch: "Geef jezelf de tijd om het te leren.",
+  english: "Give yourself the time to learn it.",
+  explanation: "Adding <span class='hl'>je</span> after the imperative softens or encourages. <span class='hl'>Jezelf</span> (yourself) is the emphatic reflexive form.",
+},
+{
+  id: 60,
+  tags: ["verb", "tense"],
+  level: "B1",
+  patternId: "1",
+  rule: "Passive \u2014 worden + participle (action)",
+  dutch: "Nederlands wordt door Annie elke dag geoefend.",
+  english: "Dutch is practised by Annie every day.",
+  explanation: "The present passive uses <span class='hl'>worden</span> + past participle. The agent (Annie) is introduced by <span class='hl'>door</span> (by).",
+},
+{
+  id: 61,
+  tags: ["verb", "tense"],
+  level: "B1",
+  patternId: "1",
+  rule: "Passive \u2014 zijn + participle (result state)",
+  dutch: "Het woord is al geleerd.",
+  english: "The word has already been learned.",
+  explanation: "The <span class='hl'>zijn</span>-passive describes a resulting state rather than an ongoing action.",
+},
+{
+  id: 62,
+  tags: ["verb"],
+  level: "A1",
+  patternId: "1",
+  rule: "worden \u2014 to become / to get",
+  dutch: "Annie wordt elke dag beter in Nederlands.",
+  english: "Annie gets better at Dutch every day.",
+  explanation: "<span class='hl'>Worden</span> + adjective expresses a change of state ('to become/get'). It is not the same as <span class='hl'>zijn</span>, which describes a permanent condition.",
+},
+{
+  id: 63,
+  tags: ["verb", "word-order"],
+  level: "B1",
+  patternId: "13",
+  rule: "Double infinitive \u2014 modal in perfect tense",
+  dutch: "Ze heeft de hele avond Nederlands willen oefenen.",
+  english: "She wanted to practise Dutch all evening.",
+  explanation: "When a modal is used in the perfect tense, it appears as an infinitive rather than a participle: <span class='hl'>willen oefenen</span>, not <span class='hl'>gewild</span>.",
+},
+{
+  id: 64,
+  tags: ["verb", "word-order"],
+  level: "B1",
+  patternId: "1",
+  rule: "Double infinitive \u2014 laten (causative)",
+  dutch: "Hij laat haar dromen.",
+  english: "He lets her dream.",
+  explanation: "<span class='hl'>Laten</span> (to let / to have something done) takes a bare infinitive.",
+},
+{
+  id: 65,
+  tags: ["pronoun"],
+  level: "A1",
+  patternId: "1",
+  rule: "Subject vs object pronouns",
+  dutch: "Zij schrijft hem een brief; hij schrijft haar terug.",
+  english: "She writes him a letter; he writes her back.",
+  explanation: "Dutch distinguishes subject (<span class='hl'>zij/hij</span>) and object (<span class='hl'>haar/hem</span>) pronouns.",
+},
+{
+  id: 66,
+  tags: ["pronoun"],
+  level: "A2",
+  patternId: "1",
+  rule: "Unstressed vs stressed pronouns",
+  dutch: "Ze belt hem op, maar h\u00edj belt haar nooit op.",
+  english: "She calls him, but he never calls her.",
+  explanation: "Unstressed <span class='hl'>ze</span> is the default; stressed <span class='hl'>zij</span> is used for contrast or emphasis.",
+},
+{
+  id: 67,
+  tags: ["pronoun"],
+  level: "A2",
+  patternId: "1",
+  rule: "het vs dat \u2014 neuter pronoun",
+  dutch: "Antwerps is moeilijk, maar ze leert het snel.",
+  english: "Antwerp dialect is difficult, but she's learning it quickly.",
+  explanation: "<span class='hl'>Het</span> refers back to neuter nouns or to whole ideas/clauses.",
+},
+{
+  id: 68,
+  tags: ["pronoun"],
+  level: "A1",
+  patternId: "1",
+  rule: "Possessive pronouns",
+  dutch: "Zijn stad is haar stad geworden.",
+  english: "His city has become her city.",
+  explanation: "<span class='hl'>Zijn</span> (his) and <span class='hl'>haar</span> (her) are possessive pronouns. They agree with the possessor, not with the noun they modify.",
+},
+{
+  id: 69,
+  tags: ["subordinate"],
+  level: "A0",
+  patternId: "1",
+  rule: "Coordinating conjunction \u2014 en, maar, of",
+  dutch: "Ze leert Nederlands en hij leert een beetje Engels.",
+  english: "She learns Dutch and he learns a little English.",
+  explanation: "Coordinating conjunctions (<span class='hl'>en</span>, <span class='hl'>maar</span>, <span class='hl'>of</span>) join two main clauses. They do NOT trigger verb-final order.",
+},
+{
+  id: 70,
+  tags: ["subordinate"],
+  level: "A1",
+  patternId: "29",
+  rule: "want vs omdat \u2014 both mean 'because'",
+  dutch: "Ze oefent hard, want ze wil hem verrassen.",
+  english: "She practises hard, because she wants to surprise him.",
+  explanation: "<span class='hl'>Want</span> is a coordinating conjunction \u2014 the verb stays in position 2. <span class='hl'>Omdat</span> is subordinating \u2014 it sends the verb to the end.",
+},
+{
+  id: 71,
+  tags: ["subordinate"],
+  level: "A2",
+  patternId: "34",
+  rule: "terwijl \u2014 while (simultaneous)",
+  dutch: "Ze luistert naar Nederlandstalige podcasts terwijl ze kookt.",
+  english: "She listens to Dutch-language podcasts while she cooks.",
+  explanation: "<span class='hl'>Terwijl</span> (while) introduces a subordinate clause of simultaneous action. Like all subordinating conjunctions, it sends the verb to the end.",
+},
+{
+  id: 72,
+  tags: ["subordinate"],
+  level: "B1",
+  patternId: "39",
+  rule: "tenzij \u2014 unless",
+  dutch: "Ze belt hem elke avond op, tenzij hij slaapt.",
+  english: "She calls him every evening, unless he's asleep.",
+  explanation: "<span class='hl'>Tenzij</span> (unless) introduces a verb-final subordinate clause.",
+},
+{
+  id: 73,
+  tags: ["adjective"],
+  level: "A1",
+  patternId: "3",
+  rule: "Predicate adjective \u2014 no ending",
+  dutch: "Zijn stem is warm en zacht.",
+  english: "His voice is warm and soft.",
+  explanation: "Adjectives used predicatively (after <span class='hl'>zijn</span>, <span class='hl'>worden</span>, etc.) take no ending.",
+},
+{
+  id: 74,
+  tags: ["adjective"],
+  level: "A1",
+  patternId: "3",
+  rule: "Attributive adjective \u2014 add -e",
+  dutch: "Ze heeft een lieve, grappige vriend.",
+  english: "She has a sweet, funny boyfriend.",
+  explanation: "Adjectives before nouns generally add <span class='hl'>-e</span>: <span class='hl'>lieve</span>, <span class='hl'>grappige</span>. The main exception is neuter indefinite nouns.",
+},
+{
+  id: 75,
+  tags: ["adjective"],
+  level: "A2",
+  patternId: "3",
+  rule: "het-word indefinite \u2014 no -e",
+  dutch: "Hij heeft een warm hart.",
+  english: "He has a warm heart.",
+  explanation: "<span class='hl'>Hart</span> is a neuter noun (het-word). With an indefinite article (<span class='hl'>een</span>), the adjective takes no <span class='hl'>-e</span> ending.",
+},
+{
+  id: 76,
+  tags: ["adjective"],
+  level: "A2",
+  patternId: "1",
+  rule: "Comparative \u2014 adjective + -er",
+  dutch: "Haar Nederlands wordt elke dag beter.",
+  english: "Her Dutch gets better every day.",
+  explanation: "Comparatives are formed by adding <span class='hl'>-er</span> to the adjective. <span class='hl'>Goed</span> \u2192 <span class='hl'>beter</span> is an irregular comparative.",
+},
+{
+  id: 77,
+  tags: ["adjective"],
+  level: "B1",
+  patternId: "1",
+  rule: "Superlative \u2014 adjective + -st",
+  dutch: "Hij is de liefste man die ze kent.",
+  english: "He is the sweetest man she knows.",
+  explanation: "Superlatives add <span class='hl'>-st</span> (then <span class='hl'>-e</span> when attributive).",
+},
+{
+  id: 78,
+  tags: ["adjective"],
+  level: "B1",
+  patternId: "1",
+  rule: "Adjective as noun",
+  dutch: "Het mooie aan hem is zijn geduld.",
+  english: "The beautiful thing about him is his patience.",
+  explanation: "Adjectives can be used as nouns with a neuter definite article: <span class='hl'>het mooie</span> (the beautiful thing).",
+},
+];
+
+const LEVELS = ["A0","A1","A2","B1","B2","C1"];
+const TOPICS = ["word-order","negation","tense","modal","question","subordinate","preposition","adjective","verb","pronoun"];
+const patternTitles = {
+  "1":"General statement","2":"Progressive (aan het)","3":"Adjective","8":"Yes/no question",
+  "9":"Question word","11":"Past (hebben)","12":"Past (zijn)","13":"Separable/modal cluster",
+  "14":"Inversion (V2)","19":"Geen + noun","20":"Niet","28":"Indirect question",
+  "29":"want (because)","30":"omdat (because)","31":"dat (that)","32":"als (if/when)",
+  "33":"toen (when)","34":"terwijl (while)","35":"zodat (so that)","36":"hoewel (although)",
+  "37":"om…te (in order to)","39":"tenzij (unless)","40":"Relative clause"
+};
+
+let activeFilter = "all";
+
+function tagClass(t){
+  const m={"word-order":"word-order","negation":"negation","tense":"tense","modal":"modal",
+    "question":"question","subordinate":"subordinate","preposition":"preposition",
+    "adjective":"adjective","pronoun":"pronoun","verb":"verb"};
+  return m[t]||"";
+}
+
+function getFiltered(){
+  if(activeFilter==="all") return sentences;
+  if(LEVELS.includes(activeFilter)) return sentences.filter(s=>s.level===activeFilter);
+  return sentences.filter(s=>s.tags.includes(activeFilter));
+}
+
+function renderCards(){
+  const filtered = getFiltered();
+  const grid = document.getElementById("grid");
+  const count = document.getElementById("count");
+  count.textContent = filtered.length+" sentence"+(filtered.length!==1?"s":"");
+  grid.innerHTML = "";
+  filtered.forEach((s,i)=>{
+    const primary = s.tags[0];
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.primary = primary;
+    card.style.animationDelay = (i*0.028)+"s";
+    const tagsHtml = s.tags.map(t=>`<span class="tag ${tagClass(t)}">${t.replace("-"," ")}</span>`).join("");
+    const patTitle = patternTitles[s.patternId] ? patternTitles[s.patternId] : "";
+    const patLink = patTitle ? `<a class="pattern-link" href="structures.html#p${s.patternId}" title="See structure pattern">Pattern: ${patTitle}</a>` : "";
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-tags">${tagsHtml}</div>
+        <span class="level-badge level-${s.level}">${s.level}</span>
+      </div>
+      <div class="rule-label">${s.rule}</div>
+      <div class="dutch">${s.dutch}</div>
+      <div class="english">${s.english}</div>
+      <div class="explanation">${s.explanation}</div>
+      ${patLink}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    renderCards();
+  });
+});
+
+// Handle URL param ?filter=xxx
+const urlParams = new URLSearchParams(window.location.search);
+const urlFilter = urlParams.get("filter");
+if(urlFilter){
+  const btn = document.querySelector(`.filter-btn[data-filter="${urlFilter}"]`);
+  if(btn){ btn.click(); }
+}
+
+renderCards();
+</script>
+</body>
+</html>
